@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Gestión de Pagos{% endblock %}
+
+{% block contenido %}
+    <div class="card">
+        <div class="card-header">
+            <span class="h3">Pagos registrados</span>
+            <a
+                name=""
+                id=""
+                class="btn btn-primary float-end"
+                href="{% url 'crear_pago' %}"
+                role="button"
+                >Registrar nuevo pago</a
+            >
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Registrado por</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Monto USD</th>
+                        <th scope="col">Tasa del dia</th>
+                        <th scope="col">Monto Bs</th>
+                        <th scope="col">Metodo de pago</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if pagos %}
+                        {% for pago in pagos %}
+                            <tr>
+                                <th scope="row">{{ pago.id }}</th>
+                                <td>{{ pago.idPersonal.username }}</td>
+                                <td>{{ pago.idCliente.nombre }}</td>
+                                <td>{{ pago.montoUSD }}</td>
+                                <td>{{ pago.tasa }}</td>
+                                <td>{{ pago.monto_bs }}</td>
+                                <td>{{pago.metodo}}</td>
+                                <td>{{ pago.fecha }}</td>
+                                <td>
+                                    <a
+                                        name=""
+                                        id=""
+                                        class="btn btn-sm btn-warning"
+                                        href="{% url 'modificar_pago' pago.id %}"
+                                        role="button"
+                                        >Editar</a
+                                    >
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#comprobanteModal"
+                                        data-url="{{ pago.comprobante.url }}"
+                                        data-titulo="{{ pago.idCliente.nombre }} - {{ pago.fecha }}"
+                                    >
+                                        Ver Comprobante
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="text-center">
+                                No se han registrado pagos aún.
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="comprobanteModal" tabindex="-1" aria-labelledby="comprobanteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="comprobanteModalLabel">Comprobante de Pago</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="comprobanteImage" src="" alt="Comprobante de Pago" class="img-fluid">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    var comprobanteModal = document.getElementById('comprobanteModal');
+    comprobanteModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var url = button.getAttribute('data-url');
+        var titulo = button.getAttribute('data-titulo');
+        
+        var modalTitle = comprobanteModal.querySelector('.modal-title');
+        var modalImage = comprobanteModal.querySelector('#comprobanteImage');
+        
+        modalTitle.textContent = titulo;
+        modalImage.src = url;
+    });
+
+</script>
+
+{% endblock %}

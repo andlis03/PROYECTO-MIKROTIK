@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Inicio{% endblock %}
+
+{% block contenido %}
+    {% if user.is_authenticated %}
+        <div class="row">
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Clientes</h3>
+                        <p class="card-text">Este es el modulo de gestion de clientes</p>
+                        <a
+                            name=""
+                            id=""
+                            class="btn btn-primary"
+                            href="#"
+                            role="button"
+                            >Gestion de clientes</a
+                        >
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Pagos</h3>
+                        <p class="card-text">Este es el modulo de gestion de pagos.</p>
+                        <a
+                            name=""
+                            id=""
+                            class="btn btn-primary"
+                            href="{% url 'gestion_pagos' 0 %}"
+                            role="button"
+                            >Gestion de pagos</a
+                        >
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Reportes</h3>
+                        <p class="card-text">Este es el modulo de gestion de reportes.</p>
+                        <a
+                            name=""
+                            id=""
+                            class="btn btn-primary"
+                            href="#"
+                            role="button"
+                            >Ver reportes</a
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="card">
+            <img class="card-img-top" src="holder.js/100x180/" alt="Title" />
+            <div class="card-body">
+                <h4 class="card-title">Inicio de la pagina</h4>
+                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum veritatis placeat explicabo quia ipsum ad sit rerum ut mollitia esse. Ipsa facilis perferendis delectus, tempore deleniti cupiditate debitis eveniet nisi!</p>
+            </div>
+            <a
+                name=""
+                id=""
+                class="btn btn-primary"
+                href="{% url 'login' %}"
+                role="button"
+                >Iniciar sesion</a
+            >
+        </div>
+    {% endif %}
+    
+{% endblock %}
