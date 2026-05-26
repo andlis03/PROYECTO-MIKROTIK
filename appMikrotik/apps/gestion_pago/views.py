@@ -10,7 +10,6 @@ def gestion_pago(request,id):
     else:
         objetos = Pago.objects.filter(idCliente=id)
 
-    print(objetos)
     return render(request, 'gestion_pagos.html', {'pagos': objetos})
 
 def crear_pago(request):
@@ -38,9 +37,9 @@ def crear_pago(request):
             elif cliente.saldo == 0:
                 cliente.estado = 'Solvente'
 
-            nuevo_pago = form.save(commit=False)
-            nuevo_pago.idPersonal = request.user
-            nuevo_pago.save()
+            nuevoPago = form.save(commit=False)
+            nuevoPago.idPersonal = request.user
+            nuevoPago.save()
 
             cliente.save()
 
@@ -49,9 +48,9 @@ def crear_pago(request):
                 mensaje=f"""
                 Registró un nuevo pago para el cliente {cliente.nombre} (Cédula: {cliente.cedula}). 
                 Monto: {montoUSD}$
-                Tasa: {nuevo_pago.tasa}
-                Comprobante: {nuevo_pago.comprobante.url if nuevo_pago.comprobante else 'Sin comprobante'}
-                Fecha: {nuevo_pago.fecha}
+                Tasa: {nuevoPago.tasa}
+                Comprobante: {nuevoPago.comprobante.url if nuevoPago.comprobante else 'Sin comprobante'}
+                Fecha: {nuevoPago.fecha}
                 """,
                 modulo = "Gestion de pagos",
                 error = False,
@@ -91,21 +90,6 @@ def modificar_pago(request, id):
                     clienteNuevo.estado = 'Pendiente'
 
                 clienteNuevo.save()
-
-                Logs.objects.create(
-                    idPersonal=request.user, 
-                    mensaje=f"""
-                    Modificó un pago del cliente {clienteNuevo.nombre} (Cédula: {clienteNuevo.cedula}). 
-                    Monto anterior: {montoAnterior}$, Monto nuevo: {montoNuevo}$
-                    Tasa anterior: {pago.tasa}, Tasa nueva: {form.cleaned_data.get('tasa')}
-                    Comprobante anterior: {pago.comprobante.url if pago.comprobante else 'Sin comprobante'}, Comprobante nuevo: {form.cleaned_data.get('comprobante').url if form.cleaned_data.get('comprobante') else 'Sin comprobante'}
-                    Fecha anterior: {pago.fecha}, Fecha nueva: {form.cleaned_data.get('fecha')}
-                    Personal anterior: {pago.idPersonal.username}, Personal nuevo: {request.user.username}
-                    """,
-                    modulo = "Gestion de pagos",
-                    error = False,
-                    fecha = timezone.now()
-                )
             else:
                 clienteAnterior.saldo += montoAnterior
                 clienteAnterior.estado = 'Pendiente'
@@ -129,25 +113,41 @@ def modificar_pago(request, id):
                 clienteAnterior.save()
                 clienteNuevo.save()
 
-                Logs.objects.create(
-                idPersonal=request.user, 
-                mensaje=f"""
-                Modificó un pago del cliente {clienteNuevo.nombre} (Cédula: {clienteNuevo.cedula}).
-                Para otro cliente {clienteAnterior.nombre} ((Cédula: {clienteAnterior.cedula}).
-                Monto anterior: {montoAnterior}$, Monto nuevo: {montoNuevo}$
-                Tasa anterior: {pago.tasa}, Tasa nueva: {form.cleaned_data.get('tasa')}
-                Comprobante anterior: {pago.comprobante.url if pago.comprobante else 'Sin comprobante'}, Comprobante nuevo: {form.cleaned_data.get('comprobante').url if form.cleaned_data.get('comprobante') else 'Sin comprobante'}
-                Fecha anterior: {pago.fecha}, Fecha nueva: {form.cleaned_data.get('fecha')}
-                Personal anterior: {pago.idPersonal.username}, Personal nuevo: {request.user.username}""",
-                modulo = "Gestion de pagos",
-                error = False,
-                fecha = timezone.now()
-                )
-
-            nuevo_pago = form.save(commit=False)
-            nuevo_pago.idPersonal = request.user
-            nuevo_pago.save()
+            nuevoPago = form.save(commit=False)
+            nuevoPago.idPersonal = request.user
+            nuevoPago.save()
             form.save_m2m()
+
+            if clienteNuevo == clienteAnterior:
+                Logs.objects.create(
+                    idPersonal=request.user, 
+                    mensaje=f"""
+                    Modificó un pago del cliente {clienteNuevo.nombre} (Cédula: {clienteNuevo.cedula}). 
+                    Monto anterior: {montoAnterior}$, Monto nuevo: {montoNuevo}$
+                    Tasa anterior: {pago.tasa}, Tasa nueva: {form.cleaned_data.get('tasa')}
+                    Comprobante anterior: {pago.comprobante.url if pago.comprobante else 'Sin comprobante'}, Comprobante nuevo: {nuevoPago.comprobante.url if nuevoPago.comprobante else 'Sin comprobante'}
+                    Fecha anterior: {pago.fecha}, Fecha nueva: {form.cleaned_data.get('fecha')}
+                    Personal anterior: {pago.idPersonal.username}, Personal nuevo: {request.user.username}
+                    """,
+                    modulo = "Gestion de pagos",
+                    error = False,
+                    fecha = timezone.now()
+                )
+            else:
+                Logs.objects.create(
+                    idPersonal=request.user, 
+                    mensaje=f"""
+                    Modificó un pago del cliente {clienteNuevo.nombre} (Cédula: {clienteNuevo.cedula}).
+                    Para otro cliente {clienteAnterior.nombre} ((Cédula: {clienteAnterior.cedula}).
+                    Monto anterior: {montoAnterior}$, Monto nuevo: {montoNuevo}$
+                    Tasa anterior: {pago.tasa}, Tasa nueva: {form.cleaned_data.get('tasa')}
+                    Comprobante anterior: {pago.comprobante.url if pago.comprobante else 'Sin comprobante'}, Comprobante nuevo: {nuevoPago.comprobante.url if nuevoPago.comprobante.url else 'Sin comprobante'}
+                    Fecha anterior: {pago.fecha}, Fecha nueva: {form.cleaned_data.get('fecha')}
+                    Personal anterior: {pago.idPersonal.username}, Personal nuevo: {request.user.username}""",
+                    modulo = "Gestion de pagos",
+                    error = False,
+                    fecha = timezone.now()
+                )
             
             return redirect('gestion_pagos', 0)
     else:

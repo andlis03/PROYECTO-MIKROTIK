@@ -51,16 +51,20 @@
                                         role="button"
                                         >Editar</a
                                     >
-                                    <button
+                                    {% if pago.comprobante %}
+                                        <button
                                         type="button"
                                         class="btn btn-primary"
                                         data-bs-toggle="modal"
                                         data-bs-target="#comprobanteModal"
                                         data-url="{{ pago.comprobante.url }}"
                                         data-titulo="{{ pago.idCliente.nombre }} - {{ pago.fecha }}"
-                                    >
-                                        Ver Comprobante
-                                    </button>
+                                        >
+                                            Ver Comprobante
+                                        </button>
+                                    {% else %}
+                                        <span class="text-muted">Sin comprobante</span>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
