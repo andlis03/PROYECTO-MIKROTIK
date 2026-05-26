@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+    <div class="card">
+        <div class="card-header">
+            <span class="h3">Modificar pago</span>
+
+        </div>
+        <div class="card-body">
+            <span class="h5 text-danger">{{ error }}</span>
+            <hr>
+            <form action="{% url 'modificar_pago' form.instance.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Modificar pago</button>
+                <a href="{% url 'gestion_pagos' 0 %}" class="btn btn-primary">Volver</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

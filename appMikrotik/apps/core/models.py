@@ -1,5 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from pyBCV import Currency
+
+# Funcion para obtener la tasa de cambio actual
+def obtener_tasa_actual():
+        try:
+            tasa = Currency().get_rate('USD',prettify=False)
+            return round(float(tasa), 2)
+        except Exception as e:
+            print(f"Error al obtener la tasa de cambio: {e}")
+            return None
 
 # Create your models here.
 class Plan(models.Model):
@@ -10,9 +21,15 @@ class Plan(models.Model):
     borrado = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.plan} {self.precioUSD} {self.velocidad_subida} {self.velocidad_bajada}"
+        return f"{self.plan} | {self.precioUSD}$ | {self.velocidad_subida}MB | {self.velocidad_bajada}MB"
     
 class Cliente(models.Model):
+    class SeleccionEstado(models.TextChoices):
+        SOLVENTE = 'Solvente', 'Solvente'
+        EXONERADO = 'Exonerado', 'Exonerado'
+        PENDIENTE = 'Pendiente', 'Pendiente'
+        DESCONECTADO = 'Desconectado', 'Desconectado'  
+
     idPlan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     nombre = models.CharField(max_length=50)
     cedula = models.CharField(max_length=9, unique=True)
@@ -21,11 +38,11 @@ class Cliente(models.Model):
     email = models.EmailField(max_length=150, unique=True)
     direccionIP = models.GenericIPAddressField(protocol='IPv4', unique=True)
     saldo = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    estado = models.CharField(max_length=20, default='Activo')
+    estado = models.CharField(max_length=20, choices=SeleccionEstado.choices, default=SeleccionEstado.SOLVENTE)
     borrado = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.cedula} {self.nombre}  {self.celular} {self.direccion} {self.email} {self.direccionIP} {self.saldo} {self.direccion} {self.estado}"
+        return f"{self.cedula} | {self.nombre} | {self.celular} | {self.email} | {self.saldo}$ | {self.estado}"
     
 class Factura(models.Model):
     idCliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
@@ -33,19 +50,30 @@ class Factura(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.idCliente} {self.montoUSD} {self.fecha}"
+        return f"{self.idCliente} | {self.montoUSD}$ | {self.fecha}"
 
 class Pago(models.Model):
+    class SeleccionMetodo(models.TextChoices):
+        TRANSFERENCIA = 'Transferencia', 'Transferencia'
+        PAGO_MOVIL = 'Pago Móvil', 'Pago Móvil'
+        ZELLE = 'Zelle', 'Zelle'
+        EFECTIVOBS = 'Efectivo Bs', 'Efectivo Bs'
+        EFECTIVODOLARES = 'Efectivo $', 'Efectivo $'
+
     idCliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     idPersonal = models.ForeignKey(User, on_delete=models.CASCADE)
     montoUSD = models.DecimalField(max_digits=10, decimal_places=2)
-    tasa = models.DecimalField(max_digits=10, decimal_places=2)
-    pagoUSD = models.BooleanField(default=False)
-    fecha = models.DateTimeField(auto_now_add=True)
-    comprobante = models.FileField(upload_to='comprobantes/%Y/%m/%d/', null=True, blank=True)
+    tasa = models.DecimalField(max_digits=10, decimal_places=2, default=obtener_tasa_actual)
+    metodo = models.CharField(max_length=20, choices=SeleccionMetodo.choices)
+    fecha = models.DateTimeField(default=timezone.now)
+    comprobante = models.FileField(upload_to='comprobantes/%Y/%m/%d/',null=True, blank=True)
 
     def __str__(self):
-        return f"{self.idCliente} {self.idPersonal} {self.montoUSD} {self.tasa} {self.pagoUSD} {self.fecha}"
+        return f"{self.idCliente.cedula} {self.idCliente.nombre} | {self.idPersonal.username} | {self.montoUSD}$ | {self.fecha}"
+    
+    @property
+    def monto_bs(self):
+        return round(self.montoUSD * self.tasa,2)
     
 class Logs(models.Model):
     idPersonal = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -55,4 +83,4 @@ class Logs(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.idPersonal} {self.modulo} {self.mensaje} {self.error} {self.fecha}"
+        return f"{self.idPersonal.username} | {self.modulo} | {self.fecha}"

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 25, 2026 at 09:37 PM
+-- Generation Time: May 26, 2026 at 04:54 AM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.18
 
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
-(1, 'pbkdf2_sha256$1200000$mlvYeiAdd9jkhmOcIzvzUi$8TCA9d3h7BtV4v+vvvID4cs3eLEdbT4HRyVSJbBbavA=', '2026-05-25 21:26:29.543361', 1, 'admin', '', '', '', 1, 1, '2026-05-25 21:26:02.958922');
+(1, 'pbkdf2_sha256$1200000$mlvYeiAdd9jkhmOcIzvzUi$8TCA9d3h7BtV4v+vvvID4cs3eLEdbT4HRyVSJbBbavA=', '2026-05-26 04:44:27.249842', 1, 'admin', '', '', '', 1, 1, '2026-05-25 21:26:02.958922');
 
 -- --------------------------------------------------------
 
@@ -254,11 +254,11 @@ CREATE TABLE IF NOT EXISTS `core_pago` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `montoUSD` decimal(10,2) NOT NULL,
   `tasa` decimal(10,2) NOT NULL,
-  `pagoUSD` tinyint(1) NOT NULL,
   `fecha` datetime(6) NOT NULL,
   `comprobante` varchar(100) DEFAULT NULL,
   `idCliente_id` bigint NOT NULL,
   `idPersonal_id` int NOT NULL,
+  `metodo` varchar(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `core_pago_idCliente_id_848ebb17` (`idCliente_id`),
   KEY `core_pago_idPersonal_id_aed299e1` (`idPersonal_id`)
@@ -279,7 +279,14 @@ CREATE TABLE IF NOT EXISTS `core_plan` (
   `velocidad_bajada` decimal(10,2) NOT NULL,
   `borrado` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `core_plan`
+--
+
+INSERT INTO `core_plan` (`id`, `plan`, `precioUSD`, `velocidad_subida`, `velocidad_bajada`, `borrado`) VALUES
+(1, 'Basico', 25.00, 5.00, 5.00, 0);
 
 -- --------------------------------------------------------
 
@@ -301,6 +308,13 @@ CREATE TABLE IF NOT EXISTS `django_admin_log` (
   KEY `django_admin_log_content_type_id_c4bce8eb` (`content_type_id`),
   KEY `django_admin_log_user_id_c564eba6` (`user_id`)
 ) ;
+
+--
+-- Dumping data for table `django_admin_log`
+--
+
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES
+(1, '2026-05-26 03:52:58.755460', '1', 'Basico 25 5 5', 1, '[{\"added\": {}}]', 11, 1);
 
 -- --------------------------------------------------------
 
@@ -347,7 +361,7 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `django_migrations`
@@ -372,7 +386,10 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (16, 'auth', '0011_update_proxy_permissions', '2026-05-20 04:55:13.624743'),
 (17, 'auth', '0012_alter_user_first_name_max_length', '2026-05-20 04:55:13.678782'),
 (18, 'sessions', '0001_initial', '2026-05-20 04:55:13.724703'),
-(19, 'core', '0001_initial', '2026-05-20 05:23:15.746635');
+(19, 'core', '0001_initial', '2026-05-20 05:23:15.746635'),
+(20, 'core', '0002_alter_pago_fecha', '2026-05-26 03:32:56.280430'),
+(21, 'core', '0003_remove_pago_pagousd_pago_metodo_alter_cliente_estado', '2026-05-26 04:22:34.775183'),
+(22, 'core', '0004_alter_pago_tasa', '2026-05-26 04:35:10.748494');
 
 -- --------------------------------------------------------
 
@@ -394,7 +411,7 @@ CREATE TABLE IF NOT EXISTS `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
-('7k2pow1le84kedx1ist0fhdkvmwb8hnz', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wRcof:vaytnSsg_MXWHkovbGuUn5DD52smy7ywZidY5aMlMCA', '2026-06-08 21:26:29.549607');
+('jeh71b1eo1namqf8im50nc3jvqofzc6f', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wRjeV:MSAUz3fmhMa7W3cufHVCXGhz7UvRfWnn7uPsngLZtwY', '2026-06-09 04:44:27.251263');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
