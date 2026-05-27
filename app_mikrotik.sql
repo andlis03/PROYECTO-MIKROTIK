@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 26, 2026 at 04:54 AM
+-- Generation Time: May 27, 2026 at 03:50 PM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.18
 
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
-(1, 'pbkdf2_sha256$1200000$mlvYeiAdd9jkhmOcIzvzUi$8TCA9d3h7BtV4v+vvvID4cs3eLEdbT4HRyVSJbBbavA=', '2026-05-26 04:44:27.249842', 1, 'admin', '', '', '', 1, 1, '2026-05-25 21:26:02.958922');
+(1, 'pbkdf2_sha256$1200000$mlvYeiAdd9jkhmOcIzvzUi$8TCA9d3h7BtV4v+vvvID4cs3eLEdbT4HRyVSJbBbavA=', '2026-05-26 16:22:58.081508', 1, 'admin', '', '', '', 1, 1, '2026-05-25 21:26:02.958922');
 
 -- --------------------------------------------------------
 
@@ -307,7 +307,7 @@ CREATE TABLE IF NOT EXISTS `django_admin_log` (
   PRIMARY KEY (`id`),
   KEY `django_admin_log_content_type_id_c4bce8eb` (`content_type_id`),
   KEY `django_admin_log_user_id_c564eba6` (`user_id`)
-) ;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `django_admin_log`
@@ -315,7 +315,6 @@ CREATE TABLE IF NOT EXISTS `django_admin_log` (
 
 INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES
 (1, '2026-05-26 03:52:58.755460', '1', 'Basico 25 5 5', 1, '[{\"added\": {}}]', 11, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -361,7 +360,7 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `django_migrations`
@@ -389,7 +388,8 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (19, 'core', '0001_initial', '2026-05-20 05:23:15.746635'),
 (20, 'core', '0002_alter_pago_fecha', '2026-05-26 03:32:56.280430'),
 (21, 'core', '0003_remove_pago_pagousd_pago_metodo_alter_cliente_estado', '2026-05-26 04:22:34.775183'),
-(22, 'core', '0004_alter_pago_tasa', '2026-05-26 04:35:10.748494');
+(22, 'core', '0004_alter_pago_tasa', '2026-05-26 04:35:10.748494'),
+(23, 'core', '0005_alter_pago_comprobante', '2026-05-27 15:42:51.070511');
 
 -- --------------------------------------------------------
 
@@ -411,7 +411,8 @@ CREATE TABLE IF NOT EXISTS `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
-('jeh71b1eo1namqf8im50nc3jvqofzc6f', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wRjeV:MSAUz3fmhMa7W3cufHVCXGhz7UvRfWnn7uPsngLZtwY', '2026-06-09 04:44:27.251263');
+('jeh71b1eo1namqf8im50nc3jvqofzc6f', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wRjeV:MSAUz3fmhMa7W3cufHVCXGhz7UvRfWnn7uPsngLZtwY', '2026-06-09 04:44:27.251263'),
+('pcrlru70mw05wxmbk221q29eesyfo6jz', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wRuYU:HKvEakkhSaM1n9QrlfAzqxbC771P6RGxD7PUj4rAW-c', '2026-06-09 16:22:58.085667');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
