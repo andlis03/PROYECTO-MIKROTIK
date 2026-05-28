@@ -1,42 +1,157 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from core.models import Cliente
+from django.utils import timezone
+from core.models import Cliente, Logs, Factura
 from .forms import ClienteForm
 
+def gestion_cliente(request,id):
+    if id == 0:
+        objetos = Cliente.objects.all()
+    else:
+        objetos = Cliente.objects.filter(idCliente=id)
+
+    return render(request, 'gestion_cliente.html', {'clientes': objetos})
+
 def crear_cliente(request):
-if request.method == 'POST':
-    form = ClienteForm(request.POST)
-    if form.is_valid():
-        form.save() 
-        return redirect('lista_clientes') 
-else:
-    form = ClienteForm() 
+    if request.method == 'POST':
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            
+            cliente = form.save(commit=False)
+            
+            cliente.estado = 'Pendiente'         
+            cliente.saldo = cliente.idPlan.precio 
+            cliente.borrado = False       
+            
+            cliente.save()  
 
-return render(request, 'clientes/crear_cliente.html', {'form': form})
+            Factura.objects.create(
+                idCliente=cliente,            
+                montoUSD=cliente.idPlan.precio,
+                fecha=timezone.now()  
+            )
 
+            Logs.objects.create(
+                idPersonal=request.user,
+                mensaje=f"""
+                Registró al nuevo cliente {cliente.nombre} (Cédula: {cliente.cedula}).
+                Celular: {cliente.celular}
+                Email: {cliente.email}
+                Direccion: {cliente.direccion}
+                Plan: {cliente.idPlan.nombre} 
+                Direccion Ip:{cliente.direccionIP}
+                Estado: {cliente.estado}
+                """,
+                modulo="Gestión de Clientes",
+                error=False,
+                fecha=timezone.now()
+            )
+
+            return redirect('gestion_clientes', 0) 
+    else:
+        form = ClienteForm() 
+
+    return render(request, 'crear_cliente.html', {'form': form})
 
 
 def modificar_cliente(request, id):
-cliente = get_object_or_404(Cliente, id=id)
+    cliente = get_object_or_404(Cliente, id=id)
 
-if request.method == 'POST':
-    form = ClienteForm(request.POST, instance=cliente)
-    if form.is_valid():
-        form.save() 
-        return redirect('lista_clientes')
-else:
-    form = ClienteForm(instance=cliente)
+    planAnterior = cliente.idPlan
+    estadoAnterior = cliente.estado
+    saldoAnterior = cliente.saldo
 
-return render(request, 'clientes/modificar_cliente.html', {'form': form, 'cliente': cliente})
+    if request.method == 'POST':
+        cliente_viejo = Cliente.objects.get(id=id)
+        
+        form = ClienteForm(request.POST, instance=cliente)
+        
+        if form.is_valid():
+            cliente = form.save(commit=False)
+
+            if cliente.idPlan == planAnterior:
+                if cliente.estado in ['Exonerado', 'Solvente']:
+                    cliente.saldo = 0.00
+                elif cliente.estado == 'Desconectado' and estadoAnterior != 'Desconectado' and saldoAnterior == 0.00:
+                    cliente.saldo = cliente.idPlan.precio
+                else:
+                    cliente.saldo = saldoAnterior
+
+
+            else:
+                if cliente.estado in ['Exonerado', 'Solvente']:
+                    cliente.saldo = 0.00
+                else:
+                    cliente.saldo = cliente.idPlan.precio
+                
+                if cliente.saldo == 0.00 and cliente.estado not in ['Exonerado']:
+                    cliente.estado = 'Solvente'
+                elif cliente.saldo > 0.00 and cliente.estado in ['Solvente']:
+                    cliente.estado = 'Pendiente'
+
+            cliente.save()
+
+            lista_cambios = []
+
+            for campo, valor_nuevo in cliente.__dict__.items():
+
+                if campo.startswith('_') or campo in ['id', 'borrado']:
+                    continue
+                
+                valor_viejo = getattr(cliente_viejo, campo)
+                
+                if valor_nuevo != valor_viejo:
+                    lista_cambios.append(f"{campo}: {valor_viejo} => {valor_nuevo}")
+
+            if lista_cambios:
+                mensaje_log = f"Modificó al cliente {cliente.nombre} (ID: {cliente.id}). Cambios realizados:\n" + "\n".join(lista_cambios)
+            else:
+                mensaje_log = f"El operador guardó al cliente {cliente.nombre} (ID: {cliente.id}) sin realizar cambios."
+
+            Logs.objects.create(
+                idPersonal=request.user,
+                mensaje=mensaje_log,
+                modulo="Gestión de Clientes",
+                error=False,
+                fecha=timezone.now()
+            )
+
+            return redirect('gestion_clientes', 0)
+            
+    else:
+        form = ClienteForm(instance=cliente)
+        
+    return render(request, 'modificar_cliente.html', {'form': form, 'cliente': cliente})
 
 
 def borrar_cliente(request, id):
-cliente = get_object_or_404(Cliente, id=id)
+    cliente = get_object_or_404(Cliente, id=id)
 
-if request.method == 'POST':
+    if request.method == 'POST':
+        ip_eliminada = cliente.direccionIP
+        
+        cliente.borrado = True
+        cliente.saldo = 0.00         
+        cliente.estado = 'Desactivado'   
+        cliente.direccionIP = None
 
-    cliente.borrado = True
-    cliente.save()
-    
-    return redirect('lista_clientes')
-    
-return render(request, 'clientes/confirmar_borrado.html', {'cliente': cliente})
+        cliente.save()
+
+        Logs.objects.create(
+                idPersonal=request.user,
+                mensaje=f"""
+                Se Elimino al cliente {cliente.nombre} (Cédula: {cliente.cedula}).
+                Celular: {cliente.celular}
+                Email: {cliente.email}
+                Direccion: {cliente.direccion}
+                Plan: {cliente.idPlan.nombre} 
+                Direccion Ip:{ip_eliminada}
+                Estado: {cliente.estado}
+                """,
+                modulo="Gestión de Clientes",
+                error=False,
+                fecha=timezone.now()
+            )
+        
+        return redirect('gestion_clientes', 0)
+        
+    return render(request, 'confirmar_borrado.html', {'cliente': cliente})
