@@ -1,32 +1,62 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Gestión de Pagos{% endblock %}
+{% block title %} Gestión de Pagos {% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item">Gestión de Pagos</li>
+{% endblock %}
 
 {% block content_page %}
-    <div class="card">
-        <div class="card-header">
-            <span class="h3">Pagos registrados</span>
+    <div class="mb-3">
+        <span class="h1">Gestión de Pagos</span>
+        <div class="card-header d-flex justify-content-between align-items-center mb-1">
+            <p class="text-muted my-2">Administra los pagos realizados por tus clientes, incluyendo detalles y comprobantes.</p>
             <a
                 name=""
                 id=""
-                class="btn btn-primary float-end"
+                class="btn btn-success justify-content-end"
                 href="{% url 'crear_pago' %}"
                 role="button"
-                >Registrar nuevo pago</a
+                >Nuevo pago</a
             >
+        </div>
+    </div>
+  
+    <!-- tarjeta para la tabla-->
+    <div class="table-responsive card">
+        <!-- cabecera de la tabla y filtros para buscar -->
+        <div class="card-header">
+            <h3 class="card-title h2">Historial de Pagos</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-start gap-3 align-items-center mb-1">
+                        <label for="fecha_inicio" class="text-nowrap"> Desde </label>
+                        <span>{{ filtros.fecha_inicio }}</span>
+                        <label for="fecha_fin" class="text-nowrap"> Hasta </label>
+                        <span>{{ filtros.fecha_fin }}</span>
+                        <!-- buscar por nombr o cedula  -->
+                        {{ filtros.nombreCliente }}
+                        <!-- buscar -->
+                        <button class="btn btn-sm btn-outline-dark" type="submit">
+                            <img src="{% static 'images/busqueda.svg' %}" alt="Buscar" title="Aplicar filtros y buscar" width="20" height="20">
+                        </button>
+                        <!-- imprimir -->
+                        <button class="btn btn-sm btn-outline-dark" type="button">
+                            <img src="{% static 'images/imprimir.svg' %}" alt="Imprimir" title="Imprimir" width="20" height="20">
+                        </button>
+                    </div>
+                </form>
+            </form>
         </div>
         <div class="card-body">
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Registrado por</th>
+                        <th scope="col">Fecha</th>
                         <th scope="col">Cliente</th>
                         <th scope="col">Monto USD</th>
-                        <th scope="col">Tasa del dia</th>
-                        <th scope="col">Monto Bs</th>
                         <th scope="col">Metodo de pago</th>
-                        <th scope="col">Fecha</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -34,37 +64,30 @@
                     {% if pagos %}
                         {% for pago in pagos %}
                             <tr>
-                                <th scope="row">{{ pago.id }}</th>
-                                <td>{{ pago.idPersonal.username }}</td>
+                                <td>{{ pago.fecha }}</td>
                                 <td>{{ pago.idCliente.nombre }}</td>
                                 <td>{{ pago.montoUSD }}</td>
-                                <td>{{ pago.tasa }}</td>
-                                <td>{{ pago.monto_bs }}</td>
-                                <td>{{pago.metodo}}</td>
-                                <td>{{ pago.fecha }}</td>
+                                <td>{{ pago.metodo }}</td>
                                 <td>
                                     <a
                                         name=""
                                         id=""
-                                        class="btn btn-sm btn-warning"
+                                        title="Editar pago"
+                                        class="btn btn-sm"
                                         href="{% url 'modificar_pago' pago.id %}"
                                         role="button"
-                                        >Editar</a
+                                        ><img src="{% static 'images/editar.svg' %}" alt="" width="20" height="20"></a
                                     >
-                                    {% if pago.comprobante %}
-                                        <button
-                                        type="button"
-                                        class="btn btn-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#comprobanteModal"
-                                        data-url="{{ pago.comprobante.url }}"
-                                        data-titulo="{{ pago.idCliente.nombre }} - {{ pago.fecha }}"
-                                        >
-                                            Ver Comprobante
-                                        </button>
-                                    {% else %}
-                                        <span class="text-muted">Sin comprobante</span>
-                                    {% endif %}
+                                    <a
+                                        name=""
+                                        id=""
+                                        title="Ver detalles de pago"
+                                        class="btn btn-sm"
+                                        href="{% url 'detalles_pago' pago.id %}"
+                                        role="button"
+                                        ><img src="{% static 'images/ver_detalles.svg' %}" alt="" width="20" height="20"></a
+                                    >
+                                    
                                 </td>
                             </tr>
                         {% endfor %}
