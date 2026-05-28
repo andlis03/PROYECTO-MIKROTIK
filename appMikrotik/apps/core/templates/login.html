@@ -1,18 +1,47 @@
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MikroCore - Iniciar Sesión</title>
 
-{% block titulo %}Login{% endblock %}
+    <!-- Enlazamos el CSS de Bootstrap -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 
-{% block contenido %}
-    <div class="card">
-        <img class="card-img-top" src="holder.js/100x180/" alt="Title" />
-        <div class="card-body">
-            <h4 class="card-title">Inicio de sesion</h4>
-            <form method="POST" action="{% url 'login' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}?">
+    
+</head>
+
+<body>
+    <!-- Contenedor principal centrado vertical y horizontalmente -->
+    <div class="container-fluid d-flex justify-content-center align-items-center">
+       <div class="login-card text-center">
+            <!-- Seccion del logo -->
+             <div class="d-flex align-items-center justify-content-center mb-4">
+                
+             </div>
+            <!-- Titulo del login --> 
+             <h2 class="login-title text-white mb-4 text-start fw-bold">Iniciar Sesión</h2>
+            <!-- Formulario de inicio de sesion --> 
+            <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-success">Login</button>
-                <a href="{% url 'home' %}" class="btn btn-primary">Volver al inicio</a>
+                <!-- Nombre del usuario--> 
+                <div class="mb-3">
+                    {{form.username}}
+                </div>
+                <!-- Contraseña del usuario--> 
+                <div class="mb-4">
+                    {{form.password}}
+                </div>
+                <!-- Boton de inicio de sesion--> 
+                <div class="login-btn-container mt-3">
+                    <button type="submit" class="btn btn-primary btn-custom">Iniciar sesion</button>
+                </div>
             </form>
-        </div>
-    </div>
-{% endblock %}
+       </div>
+        
+     </div>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

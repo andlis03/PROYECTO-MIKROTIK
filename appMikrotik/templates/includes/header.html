@@ -1,0 +1,38 @@
+{% load static %}
+<header class="header">
+  <nav
+    class="navbar navbar-expand px-3 py-1 align-items-center justify-content-between shadow-sm"
+  >
+    <!-- Bloque izquierdo: Icono + nombre de usuario (personalizable) -->
+    <div class="navbar d-flex align-items-center">
+      
+      <img src="{% static 'images/usuario_p.svg' %}" alt="User Icon" width="30" height="30" class="me-2">
+    
+      {% block user_info %}
+        {% if user.is_authenticated %} 
+          {% if user.first_name %}
+            <span class="navbar nav-link"> Bienvenido, {{ user.first_name }} </span>
+          {% else %}
+            <span class="navbar nav-link"> Bienvenido, {{ user.username | default:"Bienvenido" }}</span>
+          {% endif %}
+        {% else %}
+          <span class="navbar nav-link"> Bienvenido </span>
+        {% endif %}
+      {% endblock %}
+    </div>
+
+    <!-- botones de accion -->
+    <div class="navbar d-flex gap-3">
+        <!-- Preguntas frecuentes / Acerca de -->
+        <a href="#" class="text-white fs-5" title="Preguntas frecuentes" data-bs-toggle="tooltip">
+            <img src="{% static 'images/pregunta_frecuentes.svg' %}" alt="FAQ" width="30" height="30">
+        </a>
+        <!-- Cerrar sesión -->
+        <a href="{% url 'signout' %}" class="text-white fs-5" title="Cerrar sesión" data-bs-toggle="tooltip">
+            <img src="{% static 'images/cerrar_sesion.svg' %}" alt="Logout" width="30" height="30">
+        </a>
+    </div>
+
+
+  </nav>
+</header>
