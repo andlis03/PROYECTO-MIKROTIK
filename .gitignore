@@ -1,6 +1,8 @@
-
 #Entornos Virtuales
 venv/
 .env
 __pycache__/
 *.pyc
+
+# No subir archivos de medios generados
+media/

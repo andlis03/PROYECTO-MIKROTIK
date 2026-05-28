@@ -1,0 +1,178 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Poppins';
+    src: url('../fonts/Poppins-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/*
+    Personalizacion global de la pagina, no incluye la personalizacion del login
+*/
+
+:root {
+    --base-font: 'Poppins', sans-serif;
+    
+    --font-size-base: 1.1rem;        
+    --font-size-sm: 0.975rem;      
+    --font-size-md: 1.1rem;         
+    --font-size-lg: 1.35rem;      
+    --font-size-xl: 1.6rem;
+    --font-size-xxl: 2.1rem;        
+}
+
+/* Aplicar fuente globalmente */
+body {
+    font-family: var(--base-font);
+    font-size: var(--font-size-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Asegurar que encabezados y elementos de navegación usen la misma fuente */
+header, .header, .navbar, .main-content, .wrapper, .breadcrumb, h1, h2, h3, h4, h5, h6, .breadcrumb-item a, .btn, .navbar .nav-link {
+    font-family: var(--base-font);
+}
+
+/* Tamaños de encabezados */
+h1 { font-size: var(--font-size-xxl); font-weight: 700; }
+h2 { font-size: var(--font-size-xl); font-weight: 600; }
+h3 { font-size: var(--font-size-lg); font-weight: 600; }
+h4 { font-size: var(--font-size-md); font-weight: 700; }
+h5 { font-size: var(--font-size-sm); font-weight: 500; }
+h6 { font-size: 0.85rem; font-weight: 500; }
+
+/* Utilidades rápidas */
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+
+/*
+    HEADER/BARRA DE NAVEGACION HORIZONTAL
+*/
+
+
+
+.navbar {
+    background-color: #2668c0 !important; /* Aplicar el color de fondo */
+}
+.nav-link {
+    color: #f2f2f2 !important; /* Color del texto de los enlaces */
+    font-size: var(--font-size-md);
+}
+
+/*Aqui empieza las configuraciones de estilos del siderbar*/
+:root {
+    --sidebar-fino: 50px;    /* Ancho del sidebar cuando está cerrado */
+    --sidebar-grueso: 210px; /* Ancho del sidebar cuando está abierto */
+    --color-gris: #D9D9D9;  
+}
+
+/* ESTRUCTURA DEL SIDEBAR*/
+.custom-sidebar {
+    min-height: 100vh !important;
+    background-color: var(--color-gris) !important;
+    overflow: hidden !important;
+    transition: width 0.25s ease-in-out, max-width 0.25s ease-in-out, min-width 0.25s ease-in-out;
+}
+
+/* ESTADO 1: Cuando el menú está CERRADO (Por defecto es fino) */
+.custom-sidebar:not(:has(.menu-text.show)) {
+    width: var(--sidebar-fino) !important;
+    min-width: var(--sidebar-fino) !important;
+    max-width: var(--sidebar-fino) !important;
+}
+
+/* ESTADO 2: Cuando el menú está ABIERTO (Se expande) */
+.custom-sidebar:has(.menu-text.show) {
+    width: var(--sidebar-grueso) !important;
+    min-width: var(--sidebar-grueso) !important;
+    max-width: var(--sidebar-grueso) !important;
+}
+
+/*ENCABEZADO (Logo y Botón de tres barras)*/
+.sidebar-header {
+    width: 100% !important;
+    padding: 15px 10px !important;
+    display: flex !important;
+    align-items: center;
+}
+
+/* Si está CERRADO: Centra por completo el botón de las tres barras */
+.custom-sidebar:not(:has(.menu-text.show)) .sidebar-header {
+    justify-content: center !important;
+}
+
+/* Si está ABIERTO: Distribuye el espacio entre "MikroCore" y el botón */
+.custom-sidebar:has(.menu-text.show) .sidebar-header {
+    justify-content: space-between !important;
+    padding-left: 20px !important;
+    padding-right: 15px !important;
+}
+
+/*ELEMENTOS DEL MENÚ (Lista de navegación)*/
+.sidebar-menu-wrapper, 
+.sidebar-menu-wrapper ul {
+    background-color: transparent !important;
+    padding: 10px 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    list-style: none;
+}
+
+.custom-sidebar .nav-item {
+    width: 100% !important;
+}
+
+/* Enlaces base (nav-link) */
+.custom-sidebar .nav-link {
+    background-color: transparent !important;
+    color: #212529 !important;
+    display: flex !important;
+    align-items: center;
+    width: 100% !important;
+    white-space: nowrap; /* Evita que el texto salte de línea */
+}
+
+/* ALINEACIÓN SI ESTÁ CERRADO: Centra los íconos del menú */
+.custom-sidebar:not(:has(.menu-text.show)) .nav-link {
+    justify-content: center !important;
+    padding: 12px 0 !important;
+}
+
+.custom-sidebar:not(:has(.menu-text.show)) .nav-link img {
+    margin: 0 !important;
+}
+
+/* ALINEACIÓN SI ESTÁ ABIERTO: Alinea a la izquierda con margen */
+.custom-sidebar:has(.menu-text.show) .nav-link {
+    justify-content: flex-start !important;
+    padding: 12px 0 12px 20px !important; /* Separación desde el borde izquierdo */
+}
+
+.custom-sidebar:has(.menu-text.show) .nav-link img {
+    margin-right: 15px !important; /* Espacio entre el ícono y el texto */
+}
+
+/* Efecto hover al pasar el mouse por los botones */
+.custom-sidebar .nav-link:hover {
+    background-color: #4b7fc5 !important; 
+    border: 2px solid #191861 !important; /* Añadimos el borde un poco más oscuro que el fondo */
+    border-radius: 70px !important; /*Para que quede ovalado */   
+}
