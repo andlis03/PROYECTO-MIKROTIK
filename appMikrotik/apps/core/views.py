@@ -21,7 +21,6 @@ def signin(request):
             login(request, user)
             return redirect('home')
         else:
-            print('sapo')
             render(request, 'login.html', {'form':form}, {'error':'Formulario no valido'})
     else:
         form = LoginForm()
