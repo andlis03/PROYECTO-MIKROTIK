@@ -5,7 +5,7 @@ import re
 class ClienteForm(ModelForm):
     class Meta:
         model = Cliente
-        fields = ['idPago', 'nombre', 'cedula', 'celular', 'direccion', 'email', 'direccionIP', 'estado']
+        fields = ['idPlan', 'nombre', 'cedula', 'celular', 'direccion', 'email', 'direccionIP']
 
 
     def clean_cedula(self):

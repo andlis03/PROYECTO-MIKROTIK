@@ -5,28 +5,28 @@ from .forms import ClienteForm
 
 def gestion_cliente(request,id):
     if id == 0:
-        objetos = Cliente.objects.all()
+        objetos = Cliente.objects.filter(borrado = False)
     else:
-        objetos = Cliente.objects.filter(idCliente=id)
+        objetos = Cliente.objects.filter(idCliente=id, borrado = False)
 
-    return render(request, 'gestion_cliente.html', {'clientes': objetos})
+    return render(request, 'gestion_clientes.html', {'clientes': objetos}) 
 
 def crear_cliente(request):
     if request.method == 'POST':
-        form = ClienteForm(request.POST)
+        form = ClienteForm(request.POST, request.FILES)
         if form.is_valid():
             
             cliente = form.save(commit=False)
             
             cliente.estado = 'Pendiente'         
-            cliente.saldo = cliente.idPlan.precio 
+            cliente.saldo = cliente.idPlan.precioUSD 
             cliente.borrado = False       
             
             cliente.save()  
 
             Factura.objects.create(
                 idCliente=cliente,            
-                montoUSD=cliente.idPlan.precio,
+                montoUSD=cliente.idPlan.precioUSD,
                 fecha=timezone.now()  
             )
 
@@ -37,7 +37,7 @@ def crear_cliente(request):
                 Celular: {cliente.celular}
                 Email: {cliente.email}
                 Direccion: {cliente.direccion}
-                Plan: {cliente.idPlan.nombre} 
+                Plan: {cliente.idPlan.plan} 
                 Direccion Ip:{cliente.direccionIP}
                 Estado: {cliente.estado}
                 """,
@@ -68,25 +68,32 @@ def modificar_cliente(request, id):
         if form.is_valid():
             cliente = form.save(commit=False)
 
-            if cliente.idPlan == planAnterior:
+            if cliente.idPlan != planAnterior:
+
                 if cliente.estado in ['Exonerado', 'Solvente']:
                     cliente.saldo = 0.00
-                elif cliente.estado == 'Desconectado' and estadoAnterior != 'Desconectado' and saldoAnterior == 0.00:
-                    cliente.saldo = cliente.idPlan.precio
                 else:
-                    cliente.saldo = saldoAnterior
-
+                    cliente.saldo = cliente.idPlan.precio
+                    cliente.estado = 'Pendiente' 
+                    
+                    Factura.objects.create(
+                        idCliente=cliente,            
+                        montoUSD=cliente.idPlan.precio,
+                        fecha=timezone.now()  
+                    )
 
             else:
                 if cliente.estado in ['Exonerado', 'Solvente']:
                     cliente.saldo = 0.00
-                else:
-                    cliente.saldo = cliente.idPlan.precio
-                
-                if cliente.saldo == 0.00 and cliente.estado not in ['Exonerado']:
-                    cliente.estado = 'Solvente'
-                elif cliente.saldo > 0.00 and cliente.estado in ['Solvente']:
-                    cliente.estado = 'Pendiente'
+                    
+                elif cliente.estado == 'Desconectado':
+                    if saldoAnterior == 0.00:
+                        cliente.saldo = cliente.idPlan.precio
+                    else:
+                        cliente.saldo = saldoAnterior
+                        
+                else: # cliente.estado == 'Pendiente
+                    cliente.saldo = saldoAnterior
 
             cliente.save()
 
@@ -143,7 +150,7 @@ def borrar_cliente(request, id):
                 Celular: {cliente.celular}
                 Email: {cliente.email}
                 Direccion: {cliente.direccion}
-                Plan: {cliente.idPlan.nombre} 
+                Plan: {cliente.idPlan.plan} 
                 Direccion Ip:{ip_eliminada}
                 Estado: {cliente.estado}
                 """,
@@ -154,4 +161,4 @@ def borrar_cliente(request, id):
         
         return redirect('gestion_clientes', 0)
         
-    return render(request, 'confirmar_borrado.html', {'cliente': cliente})
+    return render(request, 'confirmar_borrar.html', {'cliente': cliente})
