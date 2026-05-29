@@ -29,12 +29,12 @@
 :root {
     --base-font: 'Poppins', sans-serif;
     
-    --font-size-base: 1.1rem;        
-    --font-size-sm: 0.975rem;      
-    --font-size-md: 1.1rem;         
-    --font-size-lg: 1.35rem;      
-    --font-size-xl: 1.6rem;
-    --font-size-xxl: 2.1rem;        
+    --font-size-base: 0.95rem;        
+    --font-size-sm: 0.85rem;      
+    --font-size-md: 0.95rem;         
+    --font-size-lg: 1.1rem;      
+    --font-size-xl: 1.3rem;
+    --font-size-xxl: 1.75rem;        
 }
 
 /* Aplicar fuente globalmente */
@@ -51,12 +51,12 @@ header, .header, .navbar, .main-content, .wrapper, .breadcrumb, h1, h2, h3, h4, 
 }
 
 /* Tamaños de encabezados */
-h1 { font-size: var(--font-size-xxl); font-weight: 700; }
-h2 { font-size: var(--font-size-xl); font-weight: 600; }
-h3 { font-size: var(--font-size-lg); font-weight: 600; }
-h4 { font-size: var(--font-size-md); font-weight: 700; }
-h5 { font-size: var(--font-size-sm); font-weight: 500; }
-h6 { font-size: 0.85rem; font-weight: 500; }
+.h1 { font-size: var(--font-size-xxl); font-weight: 700; }
+.h2 { font-size: var(--font-size-xl); font-weight: 600; }
+.h3 { font-size: var(--font-size-lg); font-weight: 600; }
+.h4 { font-size: var(--font-size-md); font-weight: 700; }
+.h5 { font-size: var(--font-size-sm); font-weight: 500; }
+.h6 { font-size: 0.85rem; font-weight: 500; }
 
 /* Utilidades rápidas */
 .text-sm { font-size: var(--font-size-sm); }
@@ -79,8 +79,8 @@ h6 { font-size: 0.85rem; font-weight: 500; }
 
 /*Aqui empieza las configuraciones de estilos del siderbar*/
 :root {
-    --sidebar-fino: 50px;    /* Ancho del sidebar cuando está cerrado */
-    --sidebar-grueso: 210px; /* Ancho del sidebar cuando está abierto */
+    --sidebar-fino: 45px;    /* Ancho del sidebar cuando está cerrado */
+    --sidebar-grueso: 180px; /* Ancho del sidebar cuando está abierto */
     --color-gris: #D9D9D9;  
 }
 
@@ -130,7 +130,7 @@ h6 { font-size: 0.85rem; font-weight: 500; }
 .sidebar-menu-wrapper, 
 .sidebar-menu-wrapper ul {
     background-color: transparent !important;
-    padding: 10px 0 !important;
+    padding: 12px 0 !important;
     margin: 0 !important;
     width: 100% !important;
     list-style: none;

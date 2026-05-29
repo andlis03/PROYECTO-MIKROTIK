@@ -1,16 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from core.models import Pago, Logs, Cliente
-from .forms import PagoForm
+from .forms import PagoForm, FiltroPagos
 
 # Create your views here.
-def gestion_pago(request,id):
+def gestion_pago(request, id):
+    filtro = FiltroPagos()
     if id == 0:
         objetos = Pago.objects.all()
     else:
         objetos = Pago.objects.filter(idCliente=id)
 
-    return render(request, 'gestion_pagos.html', {'pagos': objetos})
+    return render(request, 'gestion_pagos.html', {'pagos': objetos, 'filtros': filtro})
 
 def crear_pago(request):
     if request.method == 'POST':
