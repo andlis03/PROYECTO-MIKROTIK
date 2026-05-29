@@ -17,8 +17,6 @@ def gestion_pago(request, id):
             fecha_inicio = filtro.cleaned_data.get('fecha_inicio')
             fecha_fin = filtro.cleaned_data.get('fecha_fin')
 
-            print(f"Nombre del cliente: {nombreCliente}, Fecha inicio: {fecha_inicio}, Fecha fin: {fecha_fin}") 
-
             if nombreCliente:
                 pagos = pagos.filter(idCliente__nombre__icontains=nombreCliente)
 
