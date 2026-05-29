@@ -45,6 +45,7 @@ def logs(request):
                 logs = logs.filter(fecha__lte=fecha_fin)
     else:
         form = FiltroLogs()
-        logs = Logs.objects.all().order_by('-fecha')
-        
+        logs = Logs.objects.all()
+
+    logs = logs.order_by('-fecha')
     return render(request, 'logs.html', {'logs': logs, 'filtros': form})
