@@ -2,17 +2,40 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from core.models import Pago, Logs, Cliente
 from .forms import PagoForm, FiltroPagos
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
+@login_required
 def gestion_pago(request, id):
-    filtro = FiltroPagos()
-    if id == 0:
-        objetos = Pago.objects.all()
+    pagos = Pago.objects.all().order_by('-fecha')
+
+    if request.method == 'POST':
+        filtro = FiltroPagos(request.POST)
+        if filtro.is_valid():
+            nombreCliente = filtro.cleaned_data.get('nombreCliente')
+            fecha_inicio = filtro.cleaned_data.get('fecha_inicio')
+            fecha_fin = filtro.cleaned_data.get('fecha_fin')
+
+            if nombreCliente:
+                pagos = pagos.filter(idCliente__nombre__icontains=nombreCliente)
+
+            if fecha_inicio and fecha_fin:
+                pagos = pagos.filter(fecha__range=(fecha_inicio, fecha_fin))
+            elif fecha_inicio:
+                pagos = pagos.filter(fecha__gte=fecha_inicio)
+            elif fecha_fin:
+                pagos = pagos.filter(fecha__lte=fecha_fin)
+
+            pagos = pagos.order_by('-fecha')
     else:
-        objetos = Pago.objects.filter(idCliente=id)
+        filtro = FiltroPagos()
+        if id != 0:
+            pagos = pagos.filter(idCliente=id)
+        
+    return render(request, 'gestion_pagos.html', {'pagos': pagos, 'filtros': filtro})
 
-    return render(request, 'gestion_pagos.html', {'pagos': objetos, 'filtros': filtro})
-
+@login_required
 def crear_pago(request):
     if request.method == 'POST':
         form = PagoForm(request.POST, request.FILES)
@@ -63,6 +86,7 @@ def crear_pago(request):
         form = PagoForm()
     return render(request, 'crear_pago.html', {'form': form})
 
+@login_required
 def modificar_pago(request, id):
     pago = get_object_or_404(Pago, id=id)
 
@@ -155,3 +179,9 @@ def modificar_pago(request, id):
         form = PagoForm(instance=pago)
         
     return render(request, 'modificar_pago.html', {'form': form})
+
+@login_required
+def mostrar_detalles(request, id):
+    pago = get_object_or_404(Pago, id=id)
+    cliente = pago.idCliente
+    return render(request, 'detalles_pago.html', {'pago': pago, 'cliente': cliente})

@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
-from .forms import LoginForm
+from .forms import LoginForm, FiltroLogs
 from django.contrib.auth.decorators import login_required
+from core.models import Logs
 
 # Create your views here.
 def home(request):
@@ -25,11 +26,23 @@ def signin(request):
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
 
-def mostrar_logs(request):
-    # Aquí puedes agregar la lógica para obtener los logs desde tu base de datos o cualquier otra fuente
-    logs = [
-        {'tipo': 'atipico', 'actividad': 'Fallo de conexión con Mikrotik', 'modulo': 'Interno', 'fecha': '2024-06-01 12:00:00'},
-        {'tipo': 'tipico', 'actividad': 'Jose alejos actualizo su correo electronico', 'modulo': 'Clientes', 'fecha': '2024-06-01 13:00:00'},
-        {'tipo': 'tipico', 'actividad': 'Jose alejos cancelo su mensualidad', 'modulo': 'Pagos', 'fecha': '2024-06-01 14:00:00'},
-    ]
-    return render(request, 'logs.html', {'logs': logs})
+@login_required
+def logs(request):
+    logs = Logs.objects.all()
+    if request.method == 'POST':
+        form = FiltroLogs(request.POST)
+        if form.is_valid():
+            fecha_inicio = form.cleaned_data.get('fecha_inicio')
+            fecha_fin = form.cleaned_data.get('fecha_fin')
+
+            if fecha_inicio and fecha_fin:
+                logs = logs.filter(fecha__range=(fecha_inicio, fecha_fin))
+            elif fecha_inicio:
+                logs = logs.filter(fecha__gte=fecha_inicio)
+            elif fecha_fin:
+                logs = logs.filter(fecha__lte=fecha_fin)
+    else:
+        form = FiltroLogs()
+
+    logs = logs.order_by('-fecha')
+    return render(request, 'logs.html', {'logs': logs, 'filtros': form})
