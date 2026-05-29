@@ -17,5 +17,5 @@ class LoginForm(AuthenticationForm):
         })
 
 class FiltroLogs(forms.Form):
-    fecha_inicio = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    fecha_fin = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    fecha_inicio = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}),required=False)
+    fecha_fin = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}),required=False)
