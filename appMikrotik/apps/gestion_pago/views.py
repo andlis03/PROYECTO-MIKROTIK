@@ -2,8 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from core.models import Pago, Logs, Cliente
 from .forms import PagoForm, FiltroPagos
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
+@login_required
 def gestion_pago(request, id):
     pagos = Pago.objects.all().order_by('-fecha')
 
@@ -27,7 +30,6 @@ def gestion_pago(request, id):
                 pagos = pagos.filter(fecha__lte=fecha_fin)
 
             pagos = pagos.order_by('-fecha')
-            return render(request, 'gestion_pagos.html', {'pagos': pagos, 'filtros': filtro})
     else:
         filtro = FiltroPagos()
         if id != 0:
@@ -35,7 +37,7 @@ def gestion_pago(request, id):
         
     return render(request, 'gestion_pagos.html', {'pagos': pagos, 'filtros': filtro})
 
-
+@login_required
 def crear_pago(request):
     if request.method == 'POST':
         form = PagoForm(request.POST, request.FILES)
@@ -86,6 +88,7 @@ def crear_pago(request):
         form = PagoForm()
     return render(request, 'crear_pago.html', {'form': form})
 
+@login_required
 def modificar_pago(request, id):
     pago = get_object_or_404(Pago, id=id)
 
@@ -179,6 +182,7 @@ def modificar_pago(request, id):
         
     return render(request, 'modificar_pago.html', {'form': form})
 
+@login_required
 def mostrar_detalles(request, id):
     pago = get_object_or_404(Pago, id=id)
     cliente = pago.idCliente

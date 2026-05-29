@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import AuthenticationForm
+from django import forms
 
 class LoginForm(AuthenticationForm):
 
@@ -14,3 +15,7 @@ class LoginForm(AuthenticationForm):
         'class': 'form-control custom-input',
         'placeholder': 'Contraseña'
         })
+
+class FiltroLogs(forms.Form):
+    fecha_inicio = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    fecha_fin = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
