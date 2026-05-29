@@ -33,14 +33,15 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
               <li class="breadcrumb-item"><a href="{% url 'home' %}">Inicio</a></li>
-              {% block breadcrumb_items %} {% endblock %}
+              {% block breadcrumb_items %}{% endblock %}
             </ol>
           </nav>
           {% endblock %}
         </div>
 
         <!-- Bloque de contenido principal -->
-        <main class="flex-grow-1 px-4 py-3">
+        <main class="flex-grow-1 px-4 py-0">
+          <hr>
           {% block content_page %} Bienvenido {% endblock %}
         </main>
       </div>
