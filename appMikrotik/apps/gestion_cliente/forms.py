@@ -10,23 +10,29 @@ class ClienteForm(ModelForm):
 
     def clean_cedula(self):
             
-            cedula = self.cleaned_data.get('cedula')
+        cedula = self.cleaned_data.get('cedula')
+        
+        cedula_limpia = re.sub(r'[-.\s]', '', str(cedula))
+
+        if Cliente.objects.filter(cedula=cedula, borrado=False).exists():
+            raise forms.ValidationError("Esta cédula ya pertenece a un cliente activo.")
+        
+        if not cedula_limpia.isdigit():
+            raise forms.ValidationError("La cédula debe contener solo números.")
             
-            cedula_limpia = re.sub(r'[-.\s]', '', str(cedula))
+        if not (6 <= len(cedula_limpia) <= 9):
+            raise forms.ValidationError("La cédula debe tener una longitud válida (entre 6 y 9 dígitos).")
             
-            if not cedula_limpia.isdigit():
-                raise forms.ValidationError("La cédula debe contener solo números.")
-                
-            if not (6 <= len(cedula_limpia) <= 9):
-                raise forms.ValidationError("La cédula debe tener una longitud válida (entre 6 y 9 dígitos).")
-                
-            return cedula_limpia
+        return cedula_limpia
 
 
     def clean_celular(self):
         celular = self.cleaned_data.get('celular')
         
         celular_limpio = re.sub(r'[-.\s()+=]', '', str(celular))
+
+        if Cliente.objects.filter(celular=celular, borrado=False).exists():
+            raise forms.ValidationError("Este celular ya pertenece a un cliente activo.")
         
         if not celular_limpio.isdigit():
             raise forms.ValidationError("El número de celular debe contener solo números.")
@@ -39,6 +45,10 @@ class ClienteForm(ModelForm):
 
     def clean_direccion(self):
         direccion = self.cleaned_data.get('direccion')
+
+        if Cliente.objects.filter(direccion=direccion, borrado=False).exists():
+            raise forms.ValidationError("Esta direccion ya pertenece a un cliente activo.")
+        
         if direccion:
             
             direccion = direccion.strip().upper()  
