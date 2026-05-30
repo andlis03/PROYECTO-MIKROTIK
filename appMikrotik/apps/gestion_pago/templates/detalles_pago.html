@@ -16,17 +16,17 @@
             <div class="row g-4">
                 <div class="col-md-4">
                     <label class="form-label fst-italic text-muted small mb-1">Nombre</label>
-                    <input type="text" class="form-control bg-light" value="#" readonly>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.nombre}}" readonly>
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label fst-italic text-muted small mb-1">RIF</label>
-                    <input type="text" class="form-control bg-light" value="#" readonly>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.cedula }}" readonly>
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label fst-italic text-muted small mb-1">Plan</label>
-                    <input type="text" class="form-control bg-light" value="#" readonly>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.idPlan }}" readonly>
                 </div>
 
             </div>
@@ -40,32 +40,32 @@
             <div class="row g-4 mb-4">
                 <div class = col-md-4>
                     <label class="form-label fst-italic text-muted small mb-1">Fecha de registro de Pago</label>
-                    <input type="text" class="form-control bg-light " value="#" readonly>
+                    <input type="text" class="form-control bg-light " value="{{ pago.fecha }}" readonly>
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label fst-italic text-muted small mb-1">Tasa de cambio</label>
-                    <input type="text" class="form-control bg-light " value="#" readonly>   
+                    <input type="text" class="form-control bg-light " value="{{ pago.tasa }}" readonly>   
                 </div>
 
                 <div class="col-md-4">
                     <label class="form-label fst-italic text-muted small mb-1">Registrado por:</label>
-                    <input type="text" class="form-control bg-light " value="#" readonly>
+                    <input type="text" class="form-control bg-light " value="{{ pago.idPersonal }}" readonly>
                 </div>
             </div>
 
             <div class="row g-4 mb-4">
                 <div class="col-md-4">
                     <label class="form-label fst-italic text-muted small mb-1">Monto (Bs)</label>
-                    <input type="text" class="form-control bg-light " value="#" readonly>
+                    <input type="text" class="form-control bg-light " value="{{ pago.monto_bs }}" readonly>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fst-italic text-muted small mb-1">Monto ($)</label>
-                    <input type="text" class="form-control bg-light " value="#" readonly>
+                    <input type="text" class="form-control bg-light " value="{{ pago.montoUSD }}" readonly>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fst-italic text-muted small mb-1">Método</label>
-                    <input type="text" class="form-control bg-light " value="#" readonly>
+                    <input type="text" class="form-control bg-light " value="{{ pago.metodo }}" readonly>
                 </div>
             </div>
 
@@ -74,7 +74,7 @@
                     <label class="form-label fst-italic text-muted small mb-1">Comprobante</label>
                     <div class="form-control bg-light d-flex align-items-center" style="min-height: 38px;">
                         {% if pago.comprobante %}
-                            <a href="#" target="_blank" class="text-decoration-none small text-primary fw-bold">
+                            <a href="{{ pago.comprobante.url }}" target="_blank" class="text-decoration-none small text-primary fw-bold">
                                 Ver Archivo Adjunto
                             </a>
                         {% else %}
