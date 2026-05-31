@@ -72,15 +72,19 @@
             <div class="row g-4 mb-4">
                 <div class="col-md-4">
                     <label class="form-label fst-italic text-muted small mb-1">Comprobante</label>
-                    <div class="form-control bg-light d-flex align-items-center" style="min-height: 38px;">
+                    <div>
                         {% if pago.comprobante %}
-                            <a href="{{ pago.comprobante.url }}" target="_blank" class="text-decoration-none small text-primary fw-bold">
-                                Ver Archivo Adjunto
-                            </a>
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#comprobanteModal" data-url="{{ pago.comprobante.url }}" data-titulo="Comprobante de Pago">
+                                Ver comprobante
+                            </button>
                         {% else %}
                             <span class="text-muted small">Sin comprobante</span>
                         {% endif %}
                     </div>
+
+                    {% if pago.comprobante %}
+                        {% include 'modals/modal_comprobantes.html' %}
+                    {% endif %}
                 </div>
             </div>
 
@@ -92,3 +96,4 @@
 
 
 {% endblock %} 
+
