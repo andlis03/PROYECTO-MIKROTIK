@@ -34,12 +34,6 @@ class ClienteForm(ModelForm):
         if not (6 <= len(cedula_limpio) <= 9):
             raise forms.ValidationError("La cédula debe tener una longitud válida (entre 6 y 9 dígitos), ejemplo 30759412.")
         
-        if 'cedula' not in self.changed_data:
-            return cedula
-
-        if Cliente.objects.filter(cedula=cedula_limpio, borrado=False).exists():
-            raise forms.ValidationError("Esta cédula ya pertenece a un cliente activo.")
-            
         return cedula_limpio
 
 
@@ -54,12 +48,6 @@ class ClienteForm(ModelForm):
         if len(celular_limpio) != 11:
             raise forms.ValidationError("El número celular debe tener exactamente 11 dígitos (Ej: 04141234567).")
         
-        if 'celular' not in self.changed_data:
-            return celular_limpio
-
-        if Cliente.objects.filter(celular=celular_limpio, borrado=False).exists():
-            raise forms.ValidationError("Este celular ya pertenece a un cliente activo.")
-            
         return celular_limpio
 
 
@@ -72,23 +60,32 @@ class ClienteForm(ModelForm):
             
             if len(direccion) < 15:
                 raise forms.ValidationError("Por favor, introduce una dirección más detallada para el equipo técnico (mínimo 15 caracteres).")
-                
-        if 'direccion' not in self.changed_data:
-            return direccion
-
-        if Cliente.objects.filter(direccion=direccion, borrado=False).exists():
-            raise forms.ValidationError("Esta direccion ya pertenece a un cliente activo.")
-
+        
         return direccion
     
-    
-    def clean_direccionIP(self):
-        direccionIP = self.cleaned_data.get('direccionIP')
-
-        if 'direccionIP' not in self.changed_data:
-            return direccionIP
-
-        if Cliente.objects.filter(direccionIP=direccionIP, borrado=False).exists():
-            raise forms.ValidationError("Esta direccionIP ya pertenece a un cliente activo.")
+    def clean(self):
+        cleaned_data = super().clean()
         
-        return direccionIP
+        campos_unicos = ['cedula', 'email', 'direccionIP', 'celular']
+        
+        for nombre_campo in campos_unicos:
+            valor = cleaned_data.get(nombre_campo)
+            
+            if valor:
+                filtros = {
+                    nombre_campo: valor,
+                    'borrado': False
+                }
+                consulta = Cliente.objects.filter(**filtros)
+                
+                if self.instance and self.instance.pk:
+                    consulta = consulta.exclude(pk=self.instance.pk)
+                
+                if consulta.exists():
+                    self.add_error(
+                        nombre_campo, 
+                        f"{nombre_campo} ya pertenece a un cliente activo en el sistema."
+                    )
+        
+        return cleaned_data
+
