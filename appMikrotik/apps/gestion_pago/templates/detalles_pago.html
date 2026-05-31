@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalles del Pago{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'gestion_pagos' 0 %}">Gestión de Pagos</a></li>
+<li class="breadcrumb-item active">Detalles del Pago</li>
+{% endblock %}
+
+{% block content_page %}
+    <div class="container p-4  bg-white ">
+
+        <div class="mb-5">
+            <h4 class=".h4">Detalles del Cliente</h4>
+            <hr class="text-muted mb-4">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Nombre</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.nombre}}" readonly>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">RIF</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.cedula }}" readonly>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Plan</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.idPlan }}" readonly>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mb-4">
+            <h4 class=".h4">Detalles de Pago</h4>
+            <hr class="text-muted mb-4">
+            
+            <div class="row g-4 mb-4">
+                <div class = col-md-4>
+                    <label class="form-label fst-italic text-muted small mb-1">Fecha de registro de Pago</label>
+                    <input type="text" class="form-control bg-light " value="{{ pago.fecha }}" readonly>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Tasa de cambio</label>
+                    <input type="text" class="form-control bg-light " value="{{ pago.tasa }}" readonly>   
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Registrado por:</label>
+                    <input type="text" class="form-control bg-light " value="{{ pago.idPersonal }}" readonly>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Monto (Bs)</label>
+                    <input type="text" class="form-control bg-light " value="{{ pago.monto_bs }}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Monto ($)</label>
+                    <input type="text" class="form-control bg-light " value="{{ pago.montoUSD }}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Método</label>
+                    <input type="text" class="form-control bg-light " value="{{ pago.metodo }}" readonly>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Comprobante</label>
+                    <div class="form-control bg-light d-flex align-items-center" style="min-height: 38px;">
+                        {% if pago.comprobante %}
+                            <a href="{{ pago.comprobante.url }}" target="_blank" class="text-decoration-none small text-primary fw-bold">
+                                Ver Archivo Adjunto
+                            </a>
+                        {% else %}
+                            <span class="text-muted small">Sin comprobante</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+{% endblock %} 
