@@ -38,7 +38,7 @@ class Cliente(models.Model):
     email = models.EmailField(max_length=150)
     direccionIP = models.GenericIPAddressField(protocol='IPv4')
     saldo = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    estado = models.CharField(max_length=20, choices=SeleccionEstado.choices, default=SeleccionEstado.SOLVENTE)
+    estado = models.CharField(max_length=20, choices=SeleccionEstado.choices)
     borrado = models.BooleanField(default=False)
 
     def __str__(self):

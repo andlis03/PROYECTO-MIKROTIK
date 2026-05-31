@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from core.models import Cliente, Logs, Factura
 from .forms import ClienteForm
+from django.contrib.auth.decorators import login_required
 
 def gestion_cliente(request,id):
     if id == 0:
@@ -11,24 +12,29 @@ def gestion_cliente(request,id):
 
     return render(request, 'gestion_clientes.html', {'clientes': objetos}) 
 
+@login_required
 def crear_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST, request.FILES)
         if form.is_valid():
             
             cliente = form.save(commit=False)
+
+            if form.cleaned_data.get('exonerar_cliente'):
+                cliente.estado = 'Exonerado'
             
-            cliente.estado = 'Pendiente'         
-            cliente.saldo = cliente.idPlan.precioUSD 
-            cliente.borrado = False       
+            else:
+                cliente.estado = 'Pendiente'         
+                cliente.saldo = cliente.idPlan.precioUSD 
+                cliente.borrado = False       
             
-            cliente.save()  
+            cliente.save() 
 
             Factura.objects.create(
-                idCliente=cliente,            
-                montoUSD=cliente.idPlan.precioUSD,
-                fecha=timezone.now()  
-            )
+                idCliente = cliente,
+                montoUSD = cliente.idPlan.precioUSD + 40,  #Costo de instalacion en 40$
+                fecha=timezone.now()
+            )   
 
             Logs.objects.create(
                 idPersonal=request.user,
@@ -38,7 +44,7 @@ def crear_cliente(request):
                 Email: {cliente.email}
                 Direccion: {cliente.direccion}
                 Plan: {cliente.idPlan.plan} 
-                Direccion Ip:{cliente.direccionIP}
+                Direccion Ip: {cliente.direccionIP}
                 Estado: {cliente.estado}
                 """,
                 modulo="Gestión de Clientes",
@@ -53,50 +59,27 @@ def crear_cliente(request):
     return render(request, 'crear_cliente.html', {'form': form})
 
 
+@login_required
 def modificar_cliente(request, id):
     cliente = get_object_or_404(Cliente, id=id)
 
-    planAnterior = cliente.idPlan
-    estadoAnterior = cliente.estado
-    saldoAnterior = cliente.saldo
-
     if request.method == 'POST':
         cliente_viejo = Cliente.objects.get(id=id)
-        
         form = ClienteForm(request.POST, instance=cliente)
         
         if form.is_valid():
+
             cliente = form.save(commit=False)
 
-            if cliente.idPlan != planAnterior:
+            if form.cleaned_data.get('exonerar_cliente'):
+                cliente.estado = 'Exonerado'
+                cliente.saldo = 0.00
+            else: 
+                if cliente.estado == 'Exonerado':
+                    cliente.estado = 'Pendiente'
+                    cliente.saldo = cliente.idPlan.precioUSD
 
-                if cliente.estado in ['Exonerado', 'Solvente']:
-                    cliente.saldo = 0.00
-                else:
-                    cliente.saldo = cliente.idPlan.precio
-                    cliente.estado = 'Pendiente' 
-                    
-                    Factura.objects.create(
-                        idCliente=cliente,            
-                        montoUSD=cliente.idPlan.precio,
-                        fecha=timezone.now()  
-                    )
-
-            else:
-                if cliente.estado in ['Exonerado', 'Solvente']:
-                    cliente.saldo = 0.00
-                    
-                elif cliente.estado == 'Desconectado':
-                    if saldoAnterior == 0.00:
-                        cliente.saldo = cliente.idPlan.precio
-                    else:
-                        cliente.saldo = saldoAnterior
-                        
-                else: # cliente.estado == 'Pendiente
-                    cliente.saldo = saldoAnterior
-
-            cliente.save()
-
+            cliente = form.save()
             lista_cambios = []
 
             for campo, valor_nuevo in cliente.__dict__.items():
@@ -110,7 +93,7 @@ def modificar_cliente(request, id):
                     lista_cambios.append(f"{campo}: {valor_viejo} => {valor_nuevo}")
 
             if lista_cambios:
-                mensaje_log = f"Modificó al cliente {cliente.nombre} (ID: {cliente.id}). Cambios realizados:\n" + "\n".join(lista_cambios)
+                mensaje_log = f"Modificó al cliente {cliente.nombre} (ID: {cliente.id}). Cambios realizados:\n\n" + "\n".join(lista_cambios)
             else:
                 mensaje_log = f"El operador guardó al cliente {cliente.nombre} (ID: {cliente.id}) sin realizar cambios."
 
@@ -129,17 +112,13 @@ def modificar_cliente(request, id):
         
     return render(request, 'modificar_cliente.html', {'form': form, 'cliente': cliente})
 
-
+@login_required
 def borrar_cliente(request, id):
     cliente = get_object_or_404(Cliente, id=id)
 
     if request.method == 'POST':
-        ip_eliminada = cliente.direccionIP
         
         cliente.borrado = True
-        cliente.saldo = 0.00         
-        cliente.estado = 'Desactivado'   
-        cliente.direccionIP = None
 
         cliente.save()
 
@@ -151,7 +130,7 @@ def borrar_cliente(request, id):
                 Email: {cliente.email}
                 Direccion: {cliente.direccion}
                 Plan: {cliente.idPlan.plan} 
-                Direccion Ip:{ip_eliminada}
+                Direccion Ip:{cliente.direccionIP}
                 Estado: {cliente.estado}
                 """,
                 modulo="Gestión de Clientes",
