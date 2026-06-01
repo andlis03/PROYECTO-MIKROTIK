@@ -136,3 +136,11 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+
+# Configuracion del router MikroTik
+
+MIKROTIK_HOST = '192.168.1.1'
+MIKROTIK_USER = 'admin'
+MIKROTIK_PASSWORD = 'admin'
+MIKROTIK_PORT = 8728
