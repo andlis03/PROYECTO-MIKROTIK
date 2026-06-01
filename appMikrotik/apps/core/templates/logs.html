@@ -37,7 +37,6 @@
                         </button>
                     </div>
                 </form>
-            </form>
         </div>
         <div class="card-body">
             <table class="table table-hover">
@@ -81,16 +80,20 @@
                                 <td>{{ log.modulo }}</td>
                                 <td>{{ log.fecha }}</td>
                                 <td>
-                                    <a
-                                        name=""
-                                        id=""
+                                    <button
                                         title="Ver detalles del log"
                                         class="btn btn-sm"
-                                        href="#"
-                                        role="button"
-                                        ><img src="{% static 'images/ver_detalles.svg' %}" alt="" width="20" height="20"></a
+                                        type="button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#detalleLogModal"
+                                        data-log-nombreOperador="{{ log.user.username|escape }}"
+                                        data-log-mensaje="{{ log.mensaje|escape }}"
+                                        data-log-modulo="{{ log.modulo|escape }}"
+                                        data-log-fecha="{{ log.fecha|escape }}"
+                                        data-log-error="{{ log.error|yesno:'Atípico,Típico' }}"
                                     >
-                                    
+                                        <img src="{% static 'images/ver_detalles.svg' %}" alt="" width="20" height="20">
+                                    </button>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -105,42 +108,42 @@
             </table>
         </div>
     </div>
-    
-    <!-- Modal -->
-    <div class="modal fade" id="comprobanteModal" tabindex="-1" aria-labelledby="comprobanteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="comprobanteModalLabel">Comprobante de Pago</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <img id="comprobanteImage" src="" alt="Comprobante de Pago" class="img-fluid">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
+
+    {% include 'modals/detalle_log.html' %}
 
 {% endblock %}
 
 {% block scripts %}
-
 <script>
-    var comprobanteModal = document.getElementById('comprobanteModal');
-    comprobanteModal.addEventListener('show.bs.modal', function (event) {
+document.addEventListener('DOMContentLoaded', function () {
+    var detalleModal = document.getElementById('detalleLogModal');
+    if (!detalleModal) return;
+
+    detalleModal.addEventListener('show.bs.modal', function (event) {
         var button = event.relatedTarget;
-        var url = button.getAttribute('data-url');
-        var titulo = button.getAttribute('data-titulo');
-        
-        var modalTitle = comprobanteModal.querySelector('.modal-title');
-        var modalImage = comprobanteModal.querySelector('#comprobanteImage');
-        
-        modalTitle.textContent = titulo;
-        modalImage.src = url;
+        if (!button) return;
+
+        var nombreOperador = button.getAttribute('data-log-nombreOperador') || '';
+        var mensaje = button.getAttribute('data-log-mensaje') || '';
+        var modulo = button.getAttribute('data-log-modulo') || '';
+        var fecha = button.getAttribute('data-log-fecha') || '';
+        var error = button.getAttribute('data-log-error') || '';
+
+        var nombreInput = detalleModal.querySelector('#detalle-log-nombreOperador');
+        if (nombreInput) nombreInput.value = nombreOperador;
+
+        var mensajeInput = detalleModal.querySelector('#detalle-log-mensaje');
+        if (mensajeInput) mensajeInput.value = mensaje;
+
+        var moduloInput = detalleModal.querySelector('#detalle-log-modulo');
+        if (moduloInput) moduloInput.value = modulo;
+
+        var fechaInput = detalleModal.querySelector('#detalle-log-fecha');
+        if (fechaInput) fechaInput.value = fecha;
+
+        var errorInput = detalleModal.querySelector('#detalle-log-error');
+        if (errorInput) errorInput.value = error;
     });
-
+});
 </script>
-
 {% endblock %}
