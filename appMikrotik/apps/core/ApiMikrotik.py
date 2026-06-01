@@ -1,0 +1,55 @@
+import routeros_api
+from django.conf import settings
+from .models import Logs
+from django.contrib.auth.models import User
+
+def obtenerConexionMikroti():
+    try:
+        conexion = routeros_api.RouterOsApiPool(
+            settings.MIKROTIK_HOST,
+            username=settings.MIKROTIK_USER,
+            password=settings.MIKROTIK_PASSWORD,
+            port=settings.MIKROTIK_PORT,
+            use_ssl=False
+        )
+        api = conexion.get_api()
+        return api, conexion
+    except Exception as e:
+        usuarioSistema, _ = User.objects.get_or_create(username='system')
+        Logs.objects.create(
+            idPerson= usuarioSistema,
+            modulo='Mikrotik',
+            mensaje= f'error al conectar con el router: {str(e)}',
+            error =True
+        )
+        raise e
+
+def suspenderCliente(direccionIp):
+    api, conexion = obtenerConexionMikroti()
+    try:
+        listaDirecciones= api.get_resource('/ip/firewall/address-list')
+        existente = listaDirecciones.get(list='suspendidos', address=direccionIp)
+        if not existente:
+            listaDirecciones.add(list='suspendidos', address=direccionIp, comment='Suspendido por morosidad')
+        return True
+    except Exception as e:
+        raise e
+    finally:
+        conexion.disconnect()
+
+def reconectarCliente(direccionIp):
+    api, conexion = obtenerConexionMikroti()
+    try:
+        listaDirecciones = api.get_resource('/ip/firewall/address-list')
+        items = listaDirecciones.get(list='suspendidos', address=direccionIp)
+        for item in items:
+            item.delete()
+        return True
+    except Exception as e:
+        raise e
+    finally:
+        conexion.disconnect()
+        
+
+
+
