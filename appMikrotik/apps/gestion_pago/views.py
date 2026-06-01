@@ -78,13 +78,14 @@ Tasa: {nuevo_pago.tasa}""",
 @login_required
 def modificar_pago(request, id):
     pago = get_object_or_404(Pago, id=id)
+    pago_anterior = pago 
     montoAnterior = pago.montoUSD
 
     if request.method == 'POST':
         form = PagoForm(request.POST, request.FILES, instance=pago)
         
         if form.is_valid():
-            cliente = form.cleaned_data.get('idCliente')
+            cliente = pago.idCliente
             montoNuevo = form.cleaned_data.get('montoUSD')            
             diferencia = montoNuevo - montoAnterior
             cliente.saldo -= diferencia
@@ -113,7 +114,7 @@ def modificar_pago(request, id):
                 if campo.startswith('_') or campo in ['id', 'borrado']:
                     continue
                 
-                valor_viejo = getattr(pago, campo)
+                valor_viejo = getattr(pago_anterior, campo)
                 
                 if valor_nuevo != valor_viejo:
                     lista_cambios.append(f"{campo}: {valor_viejo} => {valor_nuevo}")
@@ -146,6 +147,7 @@ def mostrar_detalles(request, id):
 @login_required
 def pendientes(request):
     clientes = Cliente.objects.filter(borrado=False,saldo__gt=0).order_by('nombre')
+    filtro = FiltroPendientes()
 
     if request.method == 'POST':
         filtro = FiltroPendientes(request.POST)
