@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from core.models import Pago, Logs, Cliente
-from .forms import PagoForm, FiltroPagos
+from .forms import PagoForm, FiltroPagos, FiltroPendientes
 from django.contrib.auth.decorators import login_required
 
 
@@ -44,12 +44,6 @@ def crear_pago(request):
             idCliente = request.POST.get('idCliente')
             cliente = Cliente.objects.get(id=idCliente)
 
-            if cliente.saldo == 0:
-                return render(request, 'crear_pago.html', {
-                    'form': form, 
-                    'error': 'El cliente no tiene saldo pendiente.'
-                    })
-
             montoUSD = form.cleaned_data.get('montoUSD')
             cliente.saldo -= montoUSD
 
@@ -69,11 +63,9 @@ def crear_pago(request):
 
             Logs.objects.create(
                 idPersonal=request.user,
-                mensaje=f"""
-                Registró un nuevo pago para el cliente {cliente.nombre} (Cédula: {cliente.cedula}). 
-                Monto: {montoUSD}$
-                Tasa: {nuevoPago.tasa}
-                """,
+                mensaje=f"""Registró un nuevo pago para el cliente {cliente.nombre} (Cédula: {cliente.cedula}). 
+Monto: {montoUSD}$
+Tasa: {nuevoPago.tasa}""",
                 modulo = "Gestion de pagos",
                 error = False,
                 fecha = timezone.now()
@@ -87,88 +79,45 @@ def crear_pago(request):
 @login_required
 def modificar_pago(request, id):
     pago = get_object_or_404(Pago, id=id)
-
-    clienteAnterior = pago.idCliente
     montoAnterior = pago.montoUSD
 
     if request.method == 'POST':
         form = PagoForm(request.POST, request.FILES, instance=pago)
         
         if form.is_valid():
-            clienteNuevo = form.cleaned_data.get('idCliente')
-            montoNuevo = form.cleaned_data.get('montoUSD')
-            
-            if clienteNuevo == clienteAnterior:
-                diferencia = montoNuevo - montoAnterior
-                clienteNuevo.saldo -= diferencia
+            cliente = form.cleaned_data.get('idCliente')
+            montoNuevo = form.cleaned_data.get('montoUSD')            
+            diferencia = montoNuevo - montoAnterior
+            cliente.saldo -= diferencia
                 
-                if clienteNuevo.saldo < 0:
-                    return render(request, 'modificar_pago.html', {
-                        'form': form, 
-                        'error': 'El monto del pago excede el saldo pendiente del cliente.'
-                    })
-                elif clienteNuevo.saldo == 0:
-                    clienteNuevo.estado = 'Solvente'
-                else:
-                    clienteNuevo.estado = 'Pendiente'
-
-                clienteNuevo.save()
+            if cliente.saldo < 0:
+                return render(request, 'modificar_pago.html', {
+                    'form': form, 
+                    'error': 'El monto del pago excede el saldo pendiente del cliente.'
+                })
+            elif cliente.saldo == 0:
+                cliente.estado = 'Solvente'
             else:
-                clienteAnterior.saldo += montoAnterior
-                clienteAnterior.estado = 'Pendiente'
-                
-                if clienteNuevo.saldo == 0:
-                    return render(request, 'modificar_pago.html', {
-                        'form': form, 
-                        'error': 'El cliente seleccionado no tiene saldo pendiente.'
-                    })
-                    
-                clienteNuevo.saldo -= montoNuevo
-                
-                if clienteNuevo.saldo < 0:
-                    return render(request, 'modificar_pago.html', {
-                        'form': form, 
-                        'error': 'El monto del pago excede el saldo pendiente del cliente nuevo.'
-                    })
-                elif clienteNuevo.saldo == 0:
-                    clienteNuevo.estado = 'Solvente'
-                    
-                clienteAnterior.save()
-                clienteNuevo.save()
+                cliente.estado = 'Pendiente'
+
+            cliente.save()
 
             nuevoPago = form.save(commit=False)
             nuevoPago.idPersonal = request.user
             nuevoPago.save()
             form.save_m2m()
-
-            if clienteNuevo == clienteAnterior:
-                Logs.objects.create(
-                    idPersonal=request.user, 
-                    mensaje=f"""
-                    Modificó un pago del cliente {clienteNuevo.nombre} (Cédula: {clienteNuevo.cedula}). 
-                    Monto anterior: {montoAnterior}$, Monto nuevo: {montoNuevo}$
-                    Tasa anterior: {pago.tasa}, Tasa nueva: {form.cleaned_data.get('tasa')}
-                    Fecha anterior: {pago.fecha}, Fecha nueva: {form.cleaned_data.get('fecha')}
-                    Personal anterior: {pago.idPersonal.username}, Personal nuevo: {request.user.username}
-                    """,
-                    modulo = "Gestion de pagos",
-                    error = False,
-                    fecha = timezone.now()
-                )
-            else:
-                Logs.objects.create(
-                    idPersonal=request.user, 
-                    mensaje=f"""
-                    Modificó un pago del cliente {clienteNuevo.nombre} (Cédula: {clienteNuevo.cedula}).
-                    Para otro cliente {clienteAnterior.nombre} ((Cédula: {clienteAnterior.cedula}).
-                    Monto anterior: {montoAnterior}$, Monto nuevo: {montoNuevo}$
-                    Tasa anterior: {pago.tasa}, Tasa nueva: {form.cleaned_data.get('tasa')}
-                    Fecha anterior: {pago.fecha}, Fecha nueva: {form.cleaned_data.get('fecha')}
-                    Personal anterior: {pago.idPersonal.username}, Personal nuevo: {request.user.username}""",
-                    modulo = "Gestion de pagos",
-                    error = False,
-                    fecha = timezone.now()
-                )
+            
+            Logs.objects.create(
+                idPersonal=request.user, 
+                mensaje=f"""Modificó un pago del cliente {cliente.nombre} (Cédula: {cliente.cedula}). 
+Monto anterior: {montoAnterior}$, Monto nuevo: {montoNuevo}$
+Tasa anterior: {pago.tasa}, Tasa nueva: {form.cleaned_data.get('tasa')}
+Fecha anterior: {pago.fecha}, Fecha nueva: {form.cleaned_data.get('fecha')}
+Personal anterior: {pago.idPersonal.username}, Personal nuevo: {request.user.username}""",
+                modulo = "Gestion de pagos",
+                error = False,
+                fecha = timezone.now()
+            )
             
             return redirect('gestion_pagos', 0)
     else:
@@ -181,3 +130,18 @@ def mostrar_detalles(request, id):
     pago = get_object_or_404(Pago, id=id)
     cliente = pago.idCliente
     return render(request, 'detalles_pago.html', {'pago': pago, 'cliente': cliente})
+
+@login_required
+def pendientes(request):
+    clientes = Cliente.objects.filter(borrado=False).order_by('nombre')
+    clientes = clientes.filter(saldo__gt=0)
+
+    if request.method == 'POST':
+        filtro = FiltroPendientes(request.POST)
+        if filtro.is_valid():
+            nombreCliente = filtro.cleaned_data.get('nombreCliente')
+
+            if nombreCliente:
+                clientes = clientes.filter(nombre__icontains=nombreCliente)
+
+    return render(request, 'pendientes.html', {'clientes': clientes, 'filtros': filtro})
