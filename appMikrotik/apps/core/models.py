@@ -50,7 +50,7 @@ class Factura(models.Model):
     fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.idCliente} | {self.montoUSD}$ | {self.fecha}"
+        return f"{self.idCliente.cedula} | {self.idCliente.nombre} | {self.montoUSD}$ | {self.fecha}"
 
 class Pago(models.Model):
     class SeleccionMetodo(models.TextChoices):

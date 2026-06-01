@@ -47,6 +47,7 @@ def crear_pago(request,id):
             if cliente.saldo < 0:
                 return render(request, 'crear_pago.html', {
                     'form': form, 
+                    'cliente': cliente,
                     'error': 'El monto del pago excede el saldo pendiente del cliente.'
                     })
             elif cliente.saldo == 0:
@@ -54,6 +55,7 @@ def crear_pago(request,id):
 
             nuevo_pago = form.save(commit=False)
             nuevo_pago.idPersonal = request.user
+            nuevo_pago.idCliente = cliente
             nuevo_pago.save()
 
             cliente.save()
@@ -68,7 +70,7 @@ Tasa: {nuevo_pago.tasa}""",
                 fecha = timezone.now()
             )
 
-            return redirect('gestion_pagos',0)
+            return redirect('gestion_pagos')
     else:
         form = PagoForm()
     return render(request, 'crear_pago.html', {'form': form, 'cliente': cliente})
@@ -129,7 +131,7 @@ def modificar_pago(request, id):
                 fecha = timezone.now()
             )
             
-            return redirect('gestion_pagos', 0)
+            return redirect('gestion_pagos')
     else:
         form = PagoForm(instance=pago)
         
