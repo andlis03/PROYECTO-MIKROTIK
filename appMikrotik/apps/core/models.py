@@ -66,7 +66,7 @@ class Pago(models.Model):
     tasa = models.DecimalField(max_digits=10, decimal_places=2, default=obtener_tasa_actual)
     metodo = models.CharField(max_length=20, choices=SeleccionMetodo.choices)
     fecha = models.DateTimeField(default=timezone.now)
-    comprobante = models.ImageField(upload_to='comprobantes/%Y/%m/%d/')
+    comprobante = models.ImageField(upload_to='comprobantes/%Y/%m/%d/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.idCliente.cedula} {self.idCliente.nombre} | {self.idPersonal.username} | {self.montoUSD}$ | {self.fecha}"
