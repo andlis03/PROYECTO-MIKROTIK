@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Modificar Cliente{% endblock %}
+
+{% block content_page %}
+    <div class="card">
+        <div class="card-header">
+            <span class="h3">Modificar cliente</span>
+        </div>
+        <div class="card-body">
+            {% if error %}
+                <span class="h5 text-danger">{{ error }}</span>
+                <hr>
+            {% endif %}
+            <form action="{% url 'modificar_cliente' form.instance.id %}" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Modificar cliente</button>
+                    
+                    <a href="{% url 'gestion_clientes' id=0 %}" class="btn bg-secondary text-white">Volver</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
