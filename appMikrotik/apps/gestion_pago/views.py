@@ -78,7 +78,7 @@ Tasa: {nuevo_pago.tasa}""",
 @login_required
 def modificar_pago(request, id):
     pago = get_object_or_404(Pago, id=id)
-    pago_anterior = pago 
+    pago_anterior = Pago.objects.get(id=id)
     montoAnterior = pago.montoUSD
 
     if request.method == 'POST':
