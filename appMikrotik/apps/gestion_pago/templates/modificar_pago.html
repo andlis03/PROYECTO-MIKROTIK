@@ -1,20 +1,106 @@
 {% extends 'base.html' %}
 
+
+{% block title %} Modificar pago {% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item"><a href="{% url 'gestion_pagos' %}">Gestión de Pagos</a></li>
+    <li class="breadcrumb-item"> Modificar pago </li>
+{% endblock %}
+
 {% block content_page %}
-    <div class="card">
-        <div class="card-header">
-            <span class="h3">Modificar pago</span>
+    <div class="container p-4  bg-white ">
+
+        <div class="mb-5">
+            <h4 class=".h4">Información del Cliente</h4>
+            <hr class="text-muted mb-4">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Nombre</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.nombre}}" readonly>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">RIF</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.cedula }}" readonly>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Celular</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.celular }}" readonly>
+                </div>
+
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Plan</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.idPlan }}" readonly>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Estado</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.estado }}" readonly>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Saldo</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.saldo }}" readonly>
+                </div>
+
+            </div>
 
         </div>
-        <div class="card-body">
-            <span class="h5 text-danger">{{ error }}</span>
-            <hr>
-            <form action="{% url 'modificar_pago' form.instance.id %}" method="post" enctype="multipart/form-data">
+
+        <div class="mb-4">
+            <h4 class=".h4">Pago registrado</h4>
+            <hr class="text-muted mb-4">
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Modificar pago</button>
-                <a href="{% url 'gestion_pagos' %}" class="btn btn-primary">Volver</a>
+
+                <div class="row g-4 mb-4">
+
+                    <div class="col-md-4">
+                        <label class="form-label fst-italic text-muted small mb-1">Fecha de registro de pago</label>
+                        {{ form.fecha }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fst-italic text-muted small mb-1">Tasa de cambio</label>
+                        {{ form.tasa}}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fst-italic text-muted small mb-1">Metodo de pago</label>
+                        {{ form.metodo }}
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fst-italic text-muted small mb-1">Monto ($)</label>
+                        {{ form.montoUSD }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fst-italic text-muted small mb-1"> Comprobante </label>
+                        {{ form.comprobante }}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success">Confirmar</button>
+                </div>
             </form>
         </div>
+
+
     </div>
-{% endblock %}
+
+
+{% endblock %} 

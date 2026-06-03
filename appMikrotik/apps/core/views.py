@@ -14,7 +14,7 @@ def signout(request):
     logout(request)
     return redirect('login')
 
-def signin(request):
+def  signin(request):
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():

@@ -4,7 +4,7 @@
 {% block title %} Buscar clientes {% endblock %}
 
 {% block breadcrumb_items %}
-    <li class="breadcrumb-item"><a href="{% url 'gestion_pagos' 0 %}">Gestión de Pagos</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'gestion_pagos' %}">Gestión de Pagos</a></li>
     <li class="breadcrumb-item"> Buscar clientes </li>
 {% endblock %}
 
@@ -22,8 +22,8 @@
             <form method="post">
                 {% csrf_token %}
                 <div class="d-flex justify-content-start gap-3 align-items-center mb-1">
-                    <!--buscar por cedula-->
-                    {{ filtros.cedula }}
+                    <!--buscar por nombre-->
+                    {{ filtros.nombreCliente }}
                     <!--buscar-->
                     <button class="btn btn-sm btn-outline-dark" type="submit">
                         <img src="{% static 'images/busqueda.svg' %}" alt="Buscar" title="Aplicar filtros y buscar" width="20" height="20">
@@ -59,7 +59,7 @@
                                         id=""
                                         title="continuar a pago"
                                         class="btn btn-sm"
-                                        href="{% url 'crear_pago' cliente.id %}"
+                                        href="{% url 'pagos_pendientes' %}"
                                         role="button"
                                         ><img src="{% static 'images/continuar.svg' %}" alt="continuar" width="20" height="20"></a>
                                 </td>
