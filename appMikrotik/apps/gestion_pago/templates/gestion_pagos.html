@@ -101,43 +101,42 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    
-    <!-- Modal -->
-    <div class="modal fade" id="comprobanteModal" tabindex="-1" aria-labelledby="comprobanteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="comprobanteModalLabel">Comprobante de Pago</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body">
-                    <img id="comprobanteImage" src="" alt="Comprobante de Pago" class="img-fluid">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
+        <div class="card-footer">
+            {% if pagos.has_other_pages %}
+                <nav aria-label="Paginación de pagos">
+                    <ul class="pagination justify-content-center mt-2 mb-0">
+                        {% if pagos.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ pagos.previous_page_number }}{{ query_string }}">Anterior</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                        {% endif %}
+
+                        {% for num in pagos.paginator.page_range %}
+                            {% if pagos.number == num %}
+                                <li class="page-item active" aria-current="page">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{{ query_string }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if pagos.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ pagos.next_page_number }}{{ query_string }}">Siguiente</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+                        {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
         </div>
     </div>
 
-{% endblock %}
-
-{% block scripts %}
-
-<script>
-    var comprobanteModal = document.getElementById('comprobanteModal');
-    comprobanteModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-        var url = button.getAttribute('data-url');
-        var titulo = button.getAttribute('data-titulo');
-        
-        var modalTitle = comprobanteModal.querySelector('.modal-title');
-        var modalImage = comprobanteModal.querySelector('#comprobanteImage');
-        
-        modalTitle.textContent = titulo;
-        modalImage.src = url;
-    });
-
-</script>
 
 {% endblock %}
