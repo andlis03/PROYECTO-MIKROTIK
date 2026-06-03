@@ -8,4 +8,5 @@ urlpatterns = [
     path('crear_pago/', views.crear_pago, name='crear_pago'),
     path('modificar_pago/<int:id>/', views.modificar_pago, name='modificar_pago'),
     path('detalles_pago/<int:id>/', views.mostrar_detalles, name='detalles_pago'),
+    path('gestion_pagos/buscar_cliente', views.buscar, name='buscar')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

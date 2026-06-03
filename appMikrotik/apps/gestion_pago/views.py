@@ -185,3 +185,13 @@ def mostrar_detalles(request, id):
     pago = get_object_or_404(Pago, id=id)
     cliente = pago.idCliente
     return render(request, 'detalles_pago.html', {'pago': pago, 'cliente': cliente})
+
+@login_required
+def buscar(request):
+    if request == 'get':
+        clientes = Cliente.objects().all()
+
+    else:
+        clientes = []
+
+    return render(request, 'buscar_cliente.html', {'clientes':clientes})
