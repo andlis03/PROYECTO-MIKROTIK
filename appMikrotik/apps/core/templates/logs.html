@@ -1,33 +1,24 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %} Gestión de Pagos {% endblock %}
+{% block title %} Logs {% endblock %}
 
 {% block breadcrumb_items %}
-    <li class="breadcrumb-item">Gestión de Pagos</li>
+    <li class="breadcrumb-item">Logs</li>
 {% endblock %}
 
-{% block content_page %}    
-    <div class="mb-3">
-        <span class="h1">Gestión de Pagos</span>
-        <div class="card-header d-flex justify-content-between align-items-center mb-1">
-            <p class="text-muted my-2">Administra los pagos realizados por tus clientes, incluyendo detalles y comprobantes.</p>
-            <a
-                name=""
-                id=""
-                class="btn btn-success justify-content-end"
-                href="{% url 'buscar' %}"
-                role="button"
-                >Nuevo pago</a
-            >
-        </div>
+{% block content_page %}
+    <div class="d-flex align-items-center mb-3">
+        <img src="{% static 'images/info_logs.svg' %}" alt="" width="50" height="50">
+        <span class="h1 mb-0 ms-2">Auditoria y logs del sistema</span>
     </div>
+    <p class="text-muted">Los logs le ayudan a analizar el flujo tipico y atipico que mantiene la red, facilitando la deteccion de fallos</p>
   
     <!-- tarjeta para la tabla-->
     <div class="table-responsive card">
         <!-- cabecera de la tabla y filtros para buscar -->
-        <div class="card-header ">
-            <h3 class="card-title h2">Historial de Pagos</h3>
+        <div class="card-header">
+            <h3 class="card-title h2">Actividad registrada</h3>
                 <form method="post">
                     {% csrf_token %}
                     <div class="d-flex justify-content-start gap-3 align-items-center mb-1">
@@ -35,8 +26,7 @@
                         <span>{{ filtros.fecha_inicio }}</span>
                         <label for="fecha_fin" class="text-nowrap"> Hasta </label>
                         <span>{{ filtros.fecha_fin }}</span>
-                        <!-- buscar por nombr o cedula  -->
-                        {{ filtros.nombreCliente }}
+                        
                         <!-- buscar -->
                         <button class="btn btn-sm btn-outline-dark" type="submit">
                             <img src="{% static 'images/busqueda.svg' %}" alt="Buscar" title="Aplicar filtros y buscar" width="20" height="20">
@@ -53,37 +43,50 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Actividad</th>
+                        <th scope="col">Módulo</th>
                         <th scope="col">Fecha</th>
-                        <th scope="col">Cliente</th>
-                        <th scope="col">Monto USD</th>
-                        <th scope="col">Metodo de pago</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% if pagos %}
-                        {% for pago in pagos %}
+                    {% if logs %}
+                        {% for log in logs %}
                             <tr>
-                                <td>{{ pago.fecha }}</td>
-                                <td>{{ pago.idCliente.nombre }}</td>
-                                <td>{{ pago.montoUSD }}</td>
-                                <td>{{ pago.metodo }}</td>
+                                <td>
+                                {% if log.error %}
+                                        <a
+                                        name=""
+                                        id=""
+                                        title="Actividad de flujo atipico"
+                                        class="btn btn-sm"
+                                        href="#"
+                                        role="button"
+                                        ><img src="{% static 'images/atipico.svg' %}" alt="" width="20" height="20"></a
+                                    >
+                                {% else %}
+                                    <a
+                                        name=""
+                                        id=""
+                                        title="Actividad de flujo tipico"
+                                        class="btn btn-sm"
+                                        href="#"
+                                        role="button"
+                                        ><img src="{% static 'images/tipico.svg' %}" alt="" width="20" height="20"></a
+                                    >
+                                {% endif %}
+                                </td>
+                                <td>{{ log.mensaje }}</td>
+                                <td>{{ log.modulo }}</td>
+                                <td>{{ log.fecha }}</td>
                                 <td>
                                     <a
                                         name=""
                                         id=""
-                                        title="Editar pago"
+                                        title="Ver detalles del log"
                                         class="btn btn-sm"
-                                        href="{% url 'modificar_pago' pago.id %}"
-                                        role="button"
-                                        ><img src="{% static 'images/editar.svg' %}" alt="" width="20" height="20"></a
-                                    >
-                                    <a
-                                        name=""
-                                        id=""
-                                        title="Ver detalles de pago"
-                                        class="btn btn-sm"
-                                        href="{% url 'detalles_pago' pago.id %}"
+                                        href="#"
                                         role="button"
                                         ><img src="{% static 'images/ver_detalles.svg' %}" alt="" width="20" height="20"></a
                                     >
@@ -94,7 +97,7 @@
                     {% else %}
                         <tr>
                             <td colspan="9" class="text-center">
-                                Sin resultados para mostrar
+                                Sin actividad registrada en el periodo seleccionado
                             </td>
                         </tr>
                     {% endif %}
