@@ -4,6 +4,7 @@ from .forms import LoginForm, FiltroLogs
 from django.contrib.auth.decorators import login_required
 from core.models import Logs
 
+
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
