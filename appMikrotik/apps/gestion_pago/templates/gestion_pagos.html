@@ -101,6 +101,41 @@
                 </tbody>
             </table>
         </div>
+        <div class="card-footer">
+            {% if pagos.has_other_pages %}
+                <nav aria-label="Paginación de pagos">
+                    <ul class="pagination justify-content-center mt-2 mb-0">
+                        {% if pagos.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ pagos.previous_page_number }}{{ query_string }}">Anterior</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+                        {% endif %}
+
+                        {% for num in pagos.paginator.page_range %}
+                            {% if pagos.number == num %}
+                                <li class="page-item active" aria-current="page">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{{ query_string }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if pagos.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ pagos.next_page_number }}{{ query_string }}">Siguiente</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+                        {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
     </div>
 
 

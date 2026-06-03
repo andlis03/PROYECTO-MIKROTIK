@@ -88,10 +88,29 @@ body {
 }
 .login-btn-container {
     width: 100%;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; 
 }
-.btn-custom {
-    background-color: #2a6ec4; 
+
+.btn-bg-cerrar-sesion {
+    background-color: #e42929;
+}
+
+.btn-bg-cerrar-sesion:hover {
+    background-color: #b71c1c;
+}
+
+.btn-bg-continuar {
+    background-color: #2a6ec4;
+}
+
+.btn-bg-continuar:hover {
+    background-color: #1e56a0;
+}
+
+.btn-custom { /* #2a6ec4 */
     border: none;
     border-radius: 12px;
     height: 48px;
@@ -101,13 +120,14 @@ body {
     color: white;
     cursor: pointer;
     width: auto !important;
-    display: inline-block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
     padding: 8px 35px !important;
+    text-decoration: none !important;
 }
 
-.btn-custom:hover {
-    background-color: #1e56a0;
-}
 /* Estilo para el título principal del inicio de sesión */
 .login-title {
     font-size: 28px !important;
