@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 29, 2026 at 01:51 AM
+-- Generation Time: Jun 04, 2026 at 03:32 AM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.18
 
@@ -33,7 +33,15 @@ CREATE TABLE IF NOT EXISTS `auth_group` (
   `name` varchar(150) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `auth_group`
+--
+
+INSERT INTO `auth_group` (`id`, `name`) VALUES
+(1, 'asistente_administrativo'),
+(2, 'soporte');
 
 -- --------------------------------------------------------
 
@@ -50,7 +58,37 @@ CREATE TABLE IF NOT EXISTS `auth_group_permissions` (
   UNIQUE KEY `auth_group_permissions_group_id_permission_id_0cd325b0_uniq` (`group_id`,`permission_id`),
   KEY `auth_group_permissions_group_id_b120cbf9` (`group_id`),
   KEY `auth_group_permissions_permission_id_84c5c92e` (`permission_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `auth_group_permissions`
+--
+
+INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES
+(1, 1, 25),
+(2, 1, 26),
+(3, 1, 27),
+(4, 1, 28),
+(5, 1, 29),
+(6, 1, 30),
+(7, 1, 31),
+(8, 1, 32),
+(9, 1, 33),
+(10, 1, 34),
+(11, 1, 35),
+(12, 1, 36),
+(13, 1, 37),
+(14, 1, 38),
+(15, 1, 39),
+(16, 1, 40),
+(17, 1, 41),
+(18, 1, 42),
+(19, 1, 43),
+(20, 1, 44),
+(21, 2, 25),
+(22, 2, 26),
+(23, 2, 27),
+(24, 2, 28);
 
 -- --------------------------------------------------------
 
@@ -140,14 +178,16 @@ CREATE TABLE IF NOT EXISTS `auth_user` (
   `date_joined` datetime(6) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `auth_user`
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
-(1, 'pbkdf2_sha256$1200000$mlvYeiAdd9jkhmOcIzvzUi$8TCA9d3h7BtV4v+vvvID4cs3eLEdbT4HRyVSJbBbavA=', '2026-05-29 00:54:19.941745', 1, 'admin', '', '', '', 1, 1, '2026-05-25 21:26:02.958922');
+(1, 'pbkdf2_sha256$1200000$mlvYeiAdd9jkhmOcIzvzUi$8TCA9d3h7BtV4v+vvvID4cs3eLEdbT4HRyVSJbBbavA=', '2026-06-04 03:07:43.682178', 1, 'admin', '', '', '', 1, 1, '2026-05-25 21:26:02.958922'),
+(2, 'pbkdf2_sha256$1200000$dB7kjlgpZvvb7YS7Gvloya$69BJ5I7iNF0bgfaS2gpZEV2fSzLRWtHfSXJOUBD3bDI=', '2026-06-04 01:50:34.142596', 0, 'cajero', 'Sr. Cajero', 'Cajin', 'cajero@gmail.com', 0, 1, '2026-06-02 00:21:58.000000'),
+(3, 'pbkdf2_sha256$1200000$x8fDmCj7wsanWSXysTL1I5$Kx+NuVPs3nWvs8MOb3/RpwBoJIvTRFnJOcPgWhYcNFE=', '2026-06-02 02:33:56.253160', 0, 'soporte', 'Sr. Soporte', 'Soportin', 'soporte@gmail.com', 0, 1, '2026-06-02 00:23:19.000000');
 
 -- --------------------------------------------------------
 
@@ -164,7 +204,15 @@ CREATE TABLE IF NOT EXISTS `auth_user_groups` (
   UNIQUE KEY `auth_user_groups_user_id_group_id_94350c0c_uniq` (`user_id`,`group_id`),
   KEY `auth_user_groups_user_id_6a12ed8b` (`user_id`),
   KEY `auth_user_groups_group_id_97559544` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `auth_user_groups`
+--
+
+INSERT INTO `auth_user_groups` (`id`, `user_id`, `group_id`) VALUES
+(1, 2, 1),
+(2, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -202,12 +250,17 @@ CREATE TABLE IF NOT EXISTS `core_cliente` (
   `estado` varchar(20) NOT NULL,
   `borrado` tinyint(1) NOT NULL,
   `idPlan_id` bigint NOT NULL,
+  `fechaRegistro` datetime(6) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `cedula` (`cedula`),
-  UNIQUE KEY `email` (`email`),
-  UNIQUE KEY `direccionIP` (`direccionIP`),
   KEY `core_cliente_idPlan_id_6eca7a1d` (`idPlan_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `core_cliente`
+--
+
+INSERT INTO `core_cliente` (`id`, `nombre`, `cedula`, `celular`, `direccion`, `email`, `direccionIP`, `saldo`, `estado`, `borrado`, `idPlan_id`, `fechaRegistro`) VALUES
+(1, 'Cliente', '22333444', '04221112233', 'CALLE CLIENTE CASA CLIENTE', 'cliente@gmail.com', '192.168.1.1', 0.00, 'Solvente', 0, 1, '2026-06-04 02:56:27.873355');
 
 -- --------------------------------------------------------
 
@@ -223,7 +276,14 @@ CREATE TABLE IF NOT EXISTS `core_factura` (
   `idCliente_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `core_factura_idCliente_id_64b764a2` (`idCliente_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `core_factura`
+--
+
+INSERT INTO `core_factura` (`id`, `montoUSD`, `fecha`, `idCliente_id`) VALUES
+(1, 65.00, '2026-06-01 22:21:06.712451', 1);
 
 -- --------------------------------------------------------
 
@@ -241,7 +301,15 @@ CREATE TABLE IF NOT EXISTS `core_logs` (
   `idPersonal_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `core_logs_idPersonal_id_50adcf8a` (`idPersonal_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `core_logs`
+--
+
+INSERT INTO `core_logs` (`id`, `modulo`, `mensaje`, `error`, `fecha`, `idPersonal_id`) VALUES
+(1, 'Gestión de Clientes', '\n                Registró al nuevo cliente Cliente (Cédula: 22333444).\n                Celular: 04221112233\n                Email: cliente@gmail.com\n                Direccion: CALLE CLIENTE CASA CLIENTE\n                Plan: Basico \n                Direccion Ip: 192.168.1.1\n                Estado: Pendiente\n                ', 0, '2026-06-01 22:21:06.717290', 1),
+(2, 'Gestion de pagos', 'Registró un nuevo pago para el cliente Cliente (Cédula: 22333444). \nMonto: 65$\nTasa: 557.97', 0, '2026-06-01 22:39:16.595017', 1);
 
 -- --------------------------------------------------------
 
@@ -255,14 +323,21 @@ CREATE TABLE IF NOT EXISTS `core_pago` (
   `montoUSD` decimal(10,2) NOT NULL,
   `tasa` decimal(10,2) NOT NULL,
   `fecha` datetime(6) NOT NULL,
-  `comprobante` varchar(100) NOT NULL,
+  `comprobante` varchar(100) DEFAULT NULL,
   `idCliente_id` bigint NOT NULL,
   `idPersonal_id` int NOT NULL,
   `metodo` varchar(20) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `core_pago_idCliente_id_848ebb17` (`idCliente_id`),
   KEY `core_pago_idPersonal_id_aed299e1` (`idPersonal_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `core_pago`
+--
+
+INSERT INTO `core_pago` (`id`, `montoUSD`, `tasa`, `fecha`, `comprobante`, `idCliente_id`, `idPersonal_id`, `metodo`) VALUES
+(1, 65.00, 557.97, '2026-06-01 22:37:44.000000', 'comprobantes/2026/06/01/Cien_anos_de_soledad_T6uU2N6.png', 1, 1, 'Efectivo $');
 
 -- --------------------------------------------------------
 
@@ -307,7 +382,19 @@ CREATE TABLE IF NOT EXISTS `django_admin_log` (
   PRIMARY KEY (`id`),
   KEY `django_admin_log_content_type_id_c4bce8eb` (`content_type_id`),
   KEY `django_admin_log_user_id_c564eba6` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `django_admin_log`
+--
+
+INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES
+(2, '2026-06-02 00:19:05.314196', '1', 'asistente_administrativo', 1, '[{\"added\": {}}]', 2, 1),
+(3, '2026-06-02 00:19:52.706253', '2', 'soporte', 1, '[{\"added\": {}}]', 2, 1),
+(4, '2026-06-02 00:21:59.691660', '2', 'cajero', 1, '[{\"added\": {}}]', 4, 1),
+(5, '2026-06-02 00:22:56.746359', '2', 'cajero', 2, '[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"Email address\", \"Groups\"]}}]', 4, 1),
+(6, '2026-06-02 00:23:20.577895', '3', 'soporte', 1, '[{\"added\": {}}]', 4, 1),
+(7, '2026-06-02 00:23:41.966914', '3', 'soporte', 2, '[{\"changed\": {\"fields\": [\"First name\", \"Last name\", \"Email address\", \"Groups\"]}}]', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -354,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `django_migrations`
@@ -384,7 +471,11 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (21, 'core', '0003_remove_pago_pagousd_pago_metodo_alter_cliente_estado', '2026-05-26 04:22:34.775183'),
 (22, 'core', '0004_alter_pago_tasa', '2026-05-26 04:35:10.748494'),
 (23, 'core', '0005_alter_pago_comprobante', '2026-05-27 15:42:51.070511'),
-(24, 'core', '0006_alter_pago_comprobante', '2026-05-29 01:47:59.809708');
+(24, 'core', '0006_alter_pago_comprobante', '2026-05-29 01:47:59.809708'),
+(25, 'core', '0007_alter_cliente_cedula_alter_cliente_direccionip_and_more', '2026-06-01 14:59:34.702295'),
+(26, 'core', '0008_alter_cliente_estado', '2026-06-01 14:59:34.708871'),
+(27, 'core', '0009_alter_pago_comprobante', '2026-06-01 14:59:34.760175'),
+(28, 'core', '0010_cliente_fecharegistro', '2026-06-04 02:56:27.953811');
 
 -- --------------------------------------------------------
 
@@ -409,7 +500,13 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 ('jeh71b1eo1namqf8im50nc3jvqofzc6f', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wRjeV:MSAUz3fmhMa7W3cufHVCXGhz7UvRfWnn7uPsngLZtwY', '2026-06-09 04:44:27.251263'),
 ('pcrlru70mw05wxmbk221q29eesyfo6jz', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wRuYU:HKvEakkhSaM1n9QrlfAzqxbC771P6RGxD7PUj4rAW-c', '2026-06-09 16:22:58.085667'),
 ('gc8vet5af4g239o4u3ddx15j8bb8prfj', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wSGXu:J0Nd2Gs12lUfiCcaQpsu22Ms4sJfk1Ll99UpeaoHiWM', '2026-06-10 15:51:50.286723'),
-('1fcpiu3he8m2r6jl280zmpeml0hrdokm', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wSlUR:C71tDipRlvIek3ui_r24jD6i7kkBkhI-JT1rxoOeXdk', '2026-06-12 00:54:19.942991');
+('rrtn1a7uy5ek8kk7ffkloh5g91nxkac3', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wSnVY:M3nXuEpIw0XvXB19LejIU9cKeDCuGSc1mRr0eudbwlE', '2026-06-12 03:03:36.598192'),
+('3lgqibmvlxa9md191kvg14wvaoh0m717', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wSyIv:X7JThXOyMqMuOxMo7Bvxl0HKbtzVDkY6lZHi6o88qGE', '2026-06-12 14:35:17.062450'),
+('g8k7jx823m5321sh74cq18s6c3vcuw6q', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wTRFI:2jHL_pmZbBRQePHk0-GxRCfFh8D90tqyEEma3gjLas0', '2026-06-13 21:29:28.246263'),
+('9lg4pyumr75bllm7ufechnijvqu4bg0j', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wU48l:uDywh1ljEshLftUwiMcMBDBdG-ljDEJdev8j-aQVv8g', '2026-06-15 15:01:19.133111'),
+('dzq4hbaqldqh6wk11onpsexy6h5cf4r8', '.eJxVjEsOwiAUAO_y1obAAwp06d4zkMdPqgaS0q6MdzdNutDtzGTe4Gnfqt9HXv2SYAaEyy8LFJ-5HSI9qN07i71t6xLYkbDTDnbrKb-uZ_s3qDQqzFCsDjIokRCVIoFUkiNruHFZTEoFWwyZGIXThEZILaRFbhTybGnKRcPnC9A6Nw8:1wUEKz:FbtHTykSapw56iLwmFWaoxsqwQrvHoVK7xK1kXHJyK4', '2026-06-16 01:54:37.225855'),
+('jcf1b393a0xflgsu3z35t0em7x97y2gu', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wUF2n:LMKgGW2slmBgnDbjqwbg2eogbzWQfTo80esaNFMN6f8', '2026-06-16 02:39:53.571884'),
+('tplsjypwbuw5xjizgggarfmw5qykql1z', '.eJxVjMsOwiAQAP9lz4awLFTo0Xu_oVnYIlUDSR8n47-bJj3odWYybxh538q4r9MyzgI9IFx-WeT0nOoh5MH13lRqdVvmqI5EnXZVQ5PpdTvbv0HhtUAPXpLNOknqcrQGQ0ZmCihIxpEmrQ11rnMm-uDsVQuSZx9yNtlpQknw-QLSizb_:1wUyQp:LZyhB2zED1yjJ6FXHyI59qwhF6WMNvPusY-9ZSQfQoI', '2026-06-18 03:07:43.683862');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
