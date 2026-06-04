@@ -46,7 +46,7 @@ def gestion_pago(request):
     
     pagos = paginator.get_page(request.GET.get('page'))
         
-    return render(request, 'gestion_pagos.html', {'pagos': pagos, 'filtros': filtro})
+    return render(request, 'gestion_pagos.html', {'pagos': pagos, 'filtros': filtro, 'query_string': query_params.urlencode()})
 
 
 # Este metodo se encarga de registrar un nuevo pago para un cliente específico, 
@@ -206,4 +206,4 @@ def pendientes(request):
 
     clientes = paginator.get_page(request.GET.get('page'))
 
-    return render(request, 'pendientes.html', {'clientes': clientes, 'filtros': filtro})
+    return render(request, 'pendientes.html', {'clientes': clientes, 'filtros': filtro, 'query_string': query_params.urlencode()})
