@@ -80,6 +80,7 @@
                 </div>
 
                 <div class="row g-4 mb-2">
+                    <!--Campo de monto el Bs falta definir en los Forms-->
                     <div class="col-md-4">
                         <label class="form-label fst-italic text-muted small mb-1">Monto a Pagar (Bs)</label>
                         <input type="text" class="form-control bg-light" id="monto_bs" readonly>
@@ -112,25 +113,3 @@
 {% endblock %}
 
 
-{% block scripts %} 
-
-    <script>
-  const montoUsdInput = document.getElementById('id_montoUSD');
-  const tasaInput = document.getElementById('id_tasa');
-  const montoBsInput = document.getElementById('monto_bs');
-
-  function actualizarMontoBs() {
-    const monto = parseFloat(montoUsdInput.value.replace(',', '.')) || 0;
-    const tasa = parseFloat(tasaInput.value.replace(',', '.')) || 0;
-    montoBsInput.value = (monto && tasa) ? (monto * tasa).toFixed(2) : '';
-  }
-
-  montoUsdInput?.addEventListener('input', actualizarMontoBs);
-  tasaInput?.addEventListener('input', actualizarMontoBs);
-  actualizarMontoBs();
-</script>
-
-
-
-
-{% endblock %}
