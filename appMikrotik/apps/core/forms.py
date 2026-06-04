@@ -1,9 +1,11 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
 
+# Este archivo define los formularios utilizados en la aplicación core, 
+# incluyendo el formulario de inicio de sesión y el formulario de filtro para los logs del sistema.
 class LoginForm(AuthenticationForm):
 
-    def __init__(self, request = ..., *args, **kwargs):
+    def __init__(self, request = None, *args, **kwargs):
         super().__init__(request, *args, **kwargs)
 
         self.fields['username'].widget.attrs.update({
