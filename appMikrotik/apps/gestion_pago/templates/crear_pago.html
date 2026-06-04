@@ -74,16 +74,15 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fst-italic text-muted small mb-1">Tasa del Día</label>
-                        {{ form.tasa }}
+                        {{ form.tasa  }}
                     </div>
                    
                 </div>
 
                 <div class="row g-4 mb-2">
-                    <!--Campo de monto el Bs falta definir en los Forms-->
                     <div class="col-md-4">
                         <label class="form-label fst-italic text-muted small mb-1">Monto a Pagar (Bs)</label>
-                        <input type="text" class="form-control bg-light" id="monto_bs" readonly>
+                        <input type="text" class="form-control" id="monto_bs" inputmode="decimal">
                     </div>
 
                     <div class="col-md-4">
@@ -110,6 +109,67 @@
            
         
     </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const usdEntrada = document.getElementById('id_montoUSD');
+  const bsEntrada = document.getElementById('monto_bs');
+  const tasaEntrada = document.getElementById('id_tasa');
+
+  function pasar_Decimal(value) {
+    if (!value) return 0;
+    return parseFloat(value.toString().replace(/\s+/g, '').replace(',', '.')) || 0;
+  }
+
+  function formatoDecimal(value) {
+    return Number(value).toFixed(2).toString().replace('.', ',');
+  }
+
+  function CambioUsd() {
+    const usd = pasar_Decimal(usdEntrada.value);
+    const tasa = pasar_Decimal(tasaEntrada.value);
+    bsEntrada.value = tasa > 0 ? formatoDecimal(usd * tasa) : '';
+  }
+
+  function CambioBs() {
+    const bs = pasar_Decimal(bsEntrada.value);
+    const tasa = pasar_Decimal(tasaEntrada.value);
+    usdEntrada.value = tasa > 0 ? formatoDecimal(bs / tasa) : '';
+  }
+
+  let campoEditado = null;
+
+  usdEntrada?.addEventListener('input', () => {
+    campoEditado = 'usd';
+    CambioUsd();
+  });
+
+  bsEntrada?.addEventListener('input', () => {
+    campoEditado = 'bs';
+    CambioBs();
+  });
+
+    bsEntrada?.addEventListener('change', () => {
+        campoEditado = 'bs';
+        CambioBs();
+    });
+
+  tasaEntrada?.addEventListener('input', () => {
+    if (campoEditado === 'bs') {
+      CambioBs();
+    } else {
+      CambioUsd();
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (usdEntrada) usdEntrada.value = '';
+    if (bsEntrada) bsEntrada.value = '';
+    campoEditado = null;
+  });
+
+</script>
 {% endblock %}
 
 
