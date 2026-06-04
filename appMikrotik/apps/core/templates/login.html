@@ -34,6 +34,11 @@
              {% else %}
                 <!-- Titulo del login --> 
                 <h2 class="login-title text-white mb-4 text-start fw-bold">Iniciar Sesión</h2>
+                {% if error %}
+                <div class="alert alert-danger mb-3">
+                    {{ error }}
+                </div>
+                {% endif %}
                 <form method="POST">
                     {% csrf_token %}
                     <!-- Nombre del usuario--> 

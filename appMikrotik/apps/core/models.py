@@ -12,7 +12,8 @@ def obtener_tasa_actual():
             print(f"Error al obtener la tasa de cambio: {e}")
             return None
 
-# Create your models here.
+# Este archivo define los modelos de datos para la aplicación core, 
+# incluyendo los modelos para planes de internet, clientes, facturas, pagos y logs del sistema.
 class Plan(models.Model):
     plan = models.CharField(max_length=20)
     precioUSD = models.DecimalField(max_digits=10, decimal_places=2)
@@ -39,6 +40,7 @@ class Cliente(models.Model):
     direccionIP = models.GenericIPAddressField(protocol='IPv4')
     saldo = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     estado = models.CharField(max_length=20, choices=SeleccionEstado.choices)
+    fechaRegistro = models.DateTimeField(default=timezone.now)
     borrado = models.BooleanField(default=False)
 
     def __str__(self):
