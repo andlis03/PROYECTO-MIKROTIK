@@ -28,7 +28,7 @@ def signin(request):
             login(request, user)
             return redirect('home')
         else:
-            render(request, 'login.html', {'form':form, 
+            return render(request, 'login.html', {'form':form, 
                                            'error':'La contraseña o el nombre de usuario son incorrectos'})
     else:
         form = LoginForm()
