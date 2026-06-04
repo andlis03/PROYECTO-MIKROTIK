@@ -9,6 +9,13 @@ class PagoForm(ModelForm):
     class Meta:
         model = Pago
         fields = ['montoUSD', 'tasa', 'metodo', 'comprobante', 'fecha']
+        widgets = {
+            'montoUSD': forms.TextInput(attrs={'class': 'form-control','inputmode': 'decimal'}),
+            'tasa': forms.TextInput(attrs={'class': 'form-control','inputmode': 'decimal'}),
+            'metodo': forms.Select(attrs={'class': 'form-select'}),
+            'comprobante': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'fecha': forms.DateInput( attrs={'class': 'form-control', 'type': 'date'}),
+        }
 
 class FiltroPagos(forms.Form):
     nombreCliente = forms.CharField(label='Nombre', max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Nombre o Cedula', 'class': 'form-control'}))
