@@ -1,20 +1,175 @@
 {% extends 'base.html' %}
 
-{% block content_page %}
-    <div class="card">
-        <div class="card-header">
-            <span class="h3">Registrar nuevo pago</span>
+{% block title %} Crear Pago {% endblock %}
 
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item"><a href="{% url 'gestion_pagos' %}">Gestión de Pagos</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'pagos_pendientes' %}">Seleccionar Abonado</a></li>
+    <li class="breadcrumb-item active">Crear Pago</li>
+{% endblock %}
+
+{% block content_page %}
+    <div class="container p-4 bg-white">
+        
+        <div class="mb-4">
+            <h4 class=".h4">Información del Cliente</h4>
+            <hr class="text-muted mb-2">
+
+            <div class="row g-4 mb-2">
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Nombre</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.nombre }}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">RIF</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.cedula }}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Celular</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.celular }}" readonly>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-2">
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Plan</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.idPlan }}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Estado Actual</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.estado }}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fst-italic text-muted small mb-1">Saldo Pendiente</label>
+                    <input type="text" class="form-control bg-light" value="{{ cliente.saldo }}" readonly>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
+
+        <hr class="text-muted mb-3">
+
+        <div class="mb-4">
             <span class="h5 text-danger">{{ error }}</span>
-            <hr>
+        
             <form action="{% url 'crear_pago' cliente.id %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Registrar pago</button>
-                <a href="{% url 'gestion_pagos' %}" class="btn btn-primary">Volver</a>
+                <div class="row g-4">  
+                    <div class="col-md-4">
+                        <h4 class=".h4">Registrar Pago</h4>
+                    </div>
+                    <div class="col-md-3 ms-auto">
+                        {{ form.fecha }}
+                    </div>
+                </div>
+                <hr class="text-muted mb-3">
+
+                <div class="row g-4 mb-2">
+                    <div class="col-md-4">
+                        <label class="form-label fst-italic text-muted small mb-1">Monto a Pagar ($)</label>
+                        {{ form.montoUSD }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fst-italic text-muted small mb-1">Método de Pago</label>
+                        {{ form.metodo }}
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fst-italic text-muted small mb-1">Tasa del Día</label>
+                        {{ form.tasa  }}
+                    </div>
+                   
+                </div>
+
+                <div class="row g-4 mb-2">
+                    <div class="col-md-4">
+                        <label class="form-label fst-italic text-muted small mb-1">Monto a Pagar (Bs)</label>
+                        <input type="text" class="form-control" id="monto_bs" inputmode="decimal">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fst-italic text-muted small mb-1">Comprobante</label>
+                        {{ form.comprobante }} 
+                    </div>
+                </div>
+
+
+                <div class="row g-4 mt-2 justify-content-end">
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-success w-100">Finalizar Pago</button>
+                    </div>
+                </div>
+                
             </form>
+
+
+
         </div>
+
+
+
+           
+        
     </div>
 {% endblock %}
+
+{% block scripts %}
+<script>
+  const usdEntrada = document.getElementById('id_montoUSD');
+  const bsEntrada = document.getElementById('monto_bs');
+  const tasaEntrada = document.getElementById('id_tasa');
+
+  function pasar_Decimal(value) {
+    if (!value) return 0;
+    return parseFloat(value.toString().replace(/\s+/g, '').replace(',', '.')) || 0;
+  }
+
+  function formatoDecimal(value) {
+    return Number(value).toFixed(2).toString().replace('.', ',');
+  }
+
+  function CambioUsd() {
+    const usd = pasar_Decimal(usdEntrada.value);
+    const tasa = pasar_Decimal(tasaEntrada.value);
+    bsEntrada.value = tasa > 0 ? formatoDecimal(usd * tasa) : '';
+  }
+
+  function CambioBs() {
+    const bs = pasar_Decimal(bsEntrada.value);
+    const tasa = pasar_Decimal(tasaEntrada.value);
+    usdEntrada.value = tasa > 0 ? formatoDecimal(bs / tasa) : '';
+  }
+
+  let campoEditado = null;
+
+  usdEntrada?.addEventListener('input', () => {
+    campoEditado = 'usd';
+    CambioUsd();
+  });
+
+  bsEntrada?.addEventListener('input', () => {
+    campoEditado = 'bs';
+    CambioBs();
+  });
+
+    bsEntrada?.addEventListener('change', () => {
+        campoEditado = 'bs';
+        CambioBs();
+    });
+
+  tasaEntrada?.addEventListener('input', () => {
+    if (campoEditado === 'bs') {
+      CambioBs();
+    } else {
+      CambioUsd();
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    if (usdEntrada) usdEntrada.value = '';
+    if (bsEntrada) bsEntrada.value = '';
+    campoEditado = null;
+  });
+
+</script>
+{% endblock %}
+
+

@@ -10,7 +10,7 @@
 {% block content_page %}
     <div class="container p-4  bg-white ">
 
-        <div class="mb-5">
+        <div class="mb-4">
             <h4 class=".h4">Detalles del Cliente</h4>
             <hr class="text-muted mb-4">
             <div class="row g-4">
@@ -74,7 +74,7 @@
                     <label class="form-label fst-italic text-muted small mb-1">Comprobante</label>
                     <div>
                         {% if pago.comprobante %}
-                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#comprobanteModal" data-url="{{ pago.comprobante.url }}" data-titulo="Comprobante de Pago">
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#comprobanteModal"  data-titulo="Comprobante de Pago">
                                 Ver comprobante
                             </button>
                         {% else %}
