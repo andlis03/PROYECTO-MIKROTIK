@@ -1,7 +1,25 @@
 from django.forms import ModelForm, forms, BooleanField
-from core.models import Cliente
-from django.forms.widgets import CheckboxInput
+from core.models import Cliente, Plan
+from django.forms.widgets import CheckboxInput, Select
 import re 
+from django import forms
+
+class PlanSelectWidget(Select):
+    def create_option(self, name, value, label, selected, index, subindex=None, attrs=None):
+        option = super().create_option(
+            name, value, label, selected, index,
+            subindex=subindex, attrs=attrs
+        )
+        if value not in (None, ''):
+            actual_value = getattr(value, 'value', value)
+            try:
+                plan = Plan.objects.get(pk=actual_value)
+                option['attrs']['data-preciousd'] = str(plan.precioUSD)
+                option['attrs']['data-velocidad-subida'] = str(plan.velocidad_subida)
+                option['attrs']['data-velocidad-bajada'] = str(plan.velocidad_bajada)
+            except (Plan.DoesNotExist, TypeError, ValueError):
+                pass
+        return option
 
 class ClienteForm(ModelForm):
     
@@ -14,6 +32,15 @@ class ClienteForm(ModelForm):
     class Meta:
         model = Cliente
         fields = ['idPlan', 'nombre', 'cedula', 'celular', 'direccion', 'email', 'direccionIP']
+        widgets = {
+            'idPlan': PlanSelectWidget(attrs={'class': 'form-select'}),
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'cedula': forms.TextInput(attrs={'class': 'form-control','inputmode': 'numeric'}),
+            'celular': forms.TextInput(attrs={'class': 'form-control','inputmode': 'numeric'}),
+            'direccion': forms.Textarea(attrs={'class': 'form-control mb-3', 'rows': 3}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'direccionIP': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
