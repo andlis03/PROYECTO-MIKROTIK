@@ -18,23 +18,37 @@
     <div class="table-responsive card">
         <!-- cabecera de la tabla y filtros para buscar -->
         <div class="card-header">
-            <h3 class="card-title h2">Actividad registrada</h3>
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="d-flex justify-content-start gap-3 align-items-center mb-1">
-                        <label for="fecha_inicio" class="text-nowrap"> Desde </label>
-                        <span>{{ filtros.fecha_inicio }}</span>
-                        <label for="fecha_fin" class="text-nowrap"> Hasta </label>
-                        <span>{{ filtros.fecha_fin }}</span>
-                        
-                        <!-- buscar -->
-                        <button class="btn btn-sm btn-outline-dark" type="submit">
-                            <img src="{% static 'images/busqueda.svg' %}" alt="Buscar" title="Aplicar filtros y buscar" width="20" height="20">
-                        </button>
-                        <!-- imprimir -->
-                        <button class="btn btn-sm btn-outline-dark" type="button">
-                            <img src="{% static 'images/imprimir.svg' %}" alt="Imprimir" title="Imprimir" width="20" height="20">
-                        </button>
+            <form method="post">
+                {% csrf_token %}
+                    <div class="row align-items-center">
+                        <!-- contenedor del titulo-->
+                        <div class="col-md-3 align-items-center">
+                            <h3 class="card-title h3 mb-0 tabla-header-title">Actividad registrada</h3>
+                        </div>
+                        <!-- contenedor de los filtros y busqueda-->
+                        <div class="col-md-9">
+                            <div class="d-flex justify-content-end align-items-center flex-wrap">
+                                <div class="me-3 text-nowrap">
+                                    <label for="fecha_inicio" class="text-nowrap"></label>
+                                    <span>{{ filtros.fecha_inicio }}</span>
+                                </div>
+                                <div class="me-3 text-nowrap">
+                                    <label for="fecha_fin" class="text-nowrap tabla-text"></label>
+                                    <span>{{ filtros.fecha_fin }}</span>
+                                </div>
+                                <!--botones-->
+                                <div class="d-flex gap-2">
+                                    <!-- buscar -->
+                                    <button class="btn btn-sm btn-outline-dark" type="submit">
+                                        <img src="{% static 'images/busqueda.svg' %}" alt="Buscar" title="Aplicar filtros y buscar" width="20" height="20">
+                                    </button>
+                                    <!-- imprimir -->
+                                    <button class="btn btn-sm btn-outline-dark" type="button">
+                                        <img src="{% static 'images/imprimir.svg' %}" alt="Imprimir" title="Imprimir" width="20" height="20">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
         </div>
@@ -79,7 +93,7 @@
                                 <td>{{ log.mensaje|truncatechars:210 }}</td>
                                 <td>{{ log.modulo }}</td>
                                 <td>{{ log.fecha|date:'j \\d\\e F \\d\\e Y' }}</td>
-                                <td>
+                                <td class="acciones-col text-nowrap">
                                     <button
                                         title="Ver detalles del log"
                                         class="btn btn-sm"
