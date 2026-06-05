@@ -5,26 +5,33 @@ from .forms import ClienteForm, FiltroClientes
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core.paginator import Paginator
+from core.autenticacion import grupo_requerido
 
-def gestion_cliente(request,id):
+# Este metodo se encarga de mostrar la lista de clientes registrados, 
+# con la posibilidad de aplicar filtros por nombre del cliente y cedula.
+@login_required
+@grupo_requerido('soporte')
+def gestion_cliente(request):
     todos_clientes = Cliente.objects.filter(borrado=False).order_by('nombre')
 
-    filtro = FiltroClientes(request.POST)
+    if request.method == 'POST':
+        filtro = FiltroClientes(request.POST)
+        if filtro.is_valid():
+            nombreCliente = filtro.cleaned_data.get('nombreCliente')
+            estado_seleccionado = filtro.cleaned_data.get('estado')
 
-    if filtro.is_valid():
-        nombreCliente = filtro.cleaned_data.get('nombreCliente')
-        estado_seleccionado = filtro.cleaned_data.get('estado')
+            # Filtro por texto (Nombre O Cédula)
+            if nombreCliente:
+                nombreCliente = nombreCliente.strip()
+                todos_clientes = todos_clientes.filter(
+                    Q(nombre__icontains=nombreCliente) | 
+                    Q(cedula__icontains=nombreCliente)
+                )
 
-        # Filtro por texto (Nombre O Cédula)
-        if nombreCliente:
-            nombreCliente = nombreCliente.strip()
-            todos_clientes = todos_clientes.filter(
-                Q(nombre__icontains=nombreCliente) | 
-                Q(cedula__icontains=nombreCliente)
-            )
-
-        if estado_seleccionado:
-            todos_clientes = todos_clientes.filter(estado=estado_seleccionado)
+            if estado_seleccionado:
+                todos_clientes = todos_clientes.filter(estado=estado_seleccionado)
+    else:
+        filtro = FiltroClientes()
 
     paginator = Paginator(todos_clientes, 10)
     
@@ -41,7 +48,12 @@ def gestion_cliente(request,id):
         'query_string': query_params.urlencode() 
     })
 
+
+# Este metodo se encarga de registrar un nuevo cliente, 
+#si las entradas son validas, actualizamos el saldo del cliente, su estado (pendiente o exonerado) y la fecha. 
+# Registra un log detallado del nuevo cliente registrado.
 @login_required
+@grupo_requerido('asistente_administrativo')
 def crear_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST, request.FILES)
@@ -82,8 +94,11 @@ def crear_cliente(request):
 
     return render(request, 'crear_cliente.html', {'form': form})
 
-
+# Este metodo se encarga de modificar un cliente existente, 
+# si las entradas son validas, actualizamos el saldo del cliente, su estado (pendiente o exonerado) y la fecha. 
+# Registra un log detallado del nuevo cliente registrado.
 @login_required
+@grupo_requerido('asistente_administrativo')
 def modificar_cliente(request, id):
     cliente = get_object_or_404(Cliente, id=id)
 
@@ -129,14 +144,18 @@ def modificar_cliente(request, id):
                 fecha=timezone.now()
             )
 
-            return redirect('gestion_clientes', 0)
+            return redirect('gestion_clientes')
             
     else:
         form = ClienteForm(instance=cliente)
         
     return render(request, 'modificar_cliente.html', {'form': form, 'cliente': cliente})
 
+# Este metodo se encarga de borrar un cliente existente, 
+# si las entradas son validas, actualizamos su estado de borrado logico y lo cambiamos a TRUE, esto pondra al cliente como eliminado. 
+# Registra un log detallado del nuevo cliente registrado.
 @login_required
+@grupo_requerido('asistente_administrativo')
 def borrar_cliente(request, id):
     cliente = get_object_or_404(Cliente, id=id)
 
@@ -162,6 +181,6 @@ def borrar_cliente(request, id):
                 fecha=timezone.now()
             )
         
-        return redirect('gestion_clientes', 0)
+        return redirect('gestion_clientes')
         
     return render(request, 'confirmar_borrar.html', {'cliente': cliente})

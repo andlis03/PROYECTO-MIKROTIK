@@ -4,6 +4,9 @@ from core.models import Cliente
 from django.forms.widgets import CheckboxInput
 import re 
 
+# Este archivo define los formularios utilizados en la gestión de clientes, incluyendo el formulario para registrar y modificar pagos,
+# tambien trae las validaciones de los campos de la cedula, celular, direccion y que no se repitan datos de clientes existentes
+# así como los formularios de filtro para la lista de clientes
 class ClienteForm(ModelForm):
     
     exonerar_cliente = BooleanField(
@@ -91,9 +94,6 @@ class ClienteForm(ModelForm):
         return cleaned_data
 
 class FiltroClientes(forms.Form):
-
-    nombreCliente = forms.CharField(label='Buscar Cliente', max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Nombre o Cédula', 'class': 'form-control'}))
-    
+    nombreCliente = forms.CharField(label='Buscar Cliente', max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Nombre o RIF del cliente', 'class': 'form-control tabla-input'}))
     OPCIONES_ESTADO = [('', 'Todos')] + Cliente.SeleccionEstado.choices
-    
-    estado = forms.ChoiceField(choices=OPCIONES_ESTADO, required=False, widget=forms.Select(attrs={'class': 'form-select'}))
+    estado = forms.ChoiceField(choices=OPCIONES_ESTADO, required=False, widget=forms.Select(attrs={'class': 'form-select form-select-sm'}))
