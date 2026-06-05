@@ -2,10 +2,15 @@ from django.forms import ModelForm
 from core.models import Pago
 from django import forms
 
+
+
+
 # Este archivo define los formularios utilizados en la gestión de pagos, incluyendo el formulario para registrar y modificar pagos,
 # así como los formularios de filtro para la lista de pagos y la lista de clientes con pagos pendientes.
 
 class PagoForm(ModelForm):
+  
+
     class Meta:
         model = Pago
         fields = ['montoUSD', 'tasa', 'metodo', 'comprobante', 'fecha']
@@ -14,7 +19,7 @@ class PagoForm(ModelForm):
             'tasa': forms.TextInput(attrs={'class': 'form-control','inputmode': 'decimal'}),
             'metodo': forms.Select(attrs={'class': 'form-select'}),
             'comprobante': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'fecha': forms.DateInput( attrs={'class': 'form-control', 'type': 'date'}),
+            'fecha': forms.DateTimeInput( attrs={'class': 'form-control', 'type': 'date'}),
         }
 
 class FiltroPagos(forms.Form):

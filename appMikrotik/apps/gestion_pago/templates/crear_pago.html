@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %} Crear Pago {% endblock %}
 
@@ -112,64 +113,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-  const usdEntrada = document.getElementById('id_montoUSD');
-  const bsEntrada = document.getElementById('monto_bs');
-  const tasaEntrada = document.getElementById('id_tasa');
-
-  function pasar_Decimal(value) {
-    if (!value) return 0;
-    return parseFloat(value.toString().replace(/\s+/g, '').replace(',', '.')) || 0;
-  }
-
-  function formatoDecimal(value) {
-    return Number(value).toFixed(2).toString().replace('.', ',');
-  }
-
-  function CambioUsd() {
-    const usd = pasar_Decimal(usdEntrada.value);
-    const tasa = pasar_Decimal(tasaEntrada.value);
-    bsEntrada.value = tasa > 0 ? formatoDecimal(usd * tasa) : '';
-  }
-
-  function CambioBs() {
-    const bs = pasar_Decimal(bsEntrada.value);
-    const tasa = pasar_Decimal(tasaEntrada.value);
-    usdEntrada.value = tasa > 0 ? formatoDecimal(bs / tasa) : '';
-  }
-
-  let campoEditado = null;
-
-  usdEntrada?.addEventListener('input', () => {
-    campoEditado = 'usd';
-    CambioUsd();
-  });
-
-  bsEntrada?.addEventListener('input', () => {
-    campoEditado = 'bs';
-    CambioBs();
-  });
-
-    bsEntrada?.addEventListener('change', () => {
-        campoEditado = 'bs';
-        CambioBs();
-    });
-
-  tasaEntrada?.addEventListener('input', () => {
-    if (campoEditado === 'bs') {
-      CambioBs();
-    } else {
-      CambioUsd();
-    }
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    if (usdEntrada) usdEntrada.value = '';
-    if (bsEntrada) bsEntrada.value = '';
-    campoEditado = null;
-  });
-
-</script>
+    <script src="{% static 'js/calculoMontos.js' %}"></script>
 {% endblock %}
 
 
