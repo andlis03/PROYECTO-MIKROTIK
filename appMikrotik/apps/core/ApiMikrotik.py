@@ -10,14 +10,15 @@ def obtenerConexionMikroti():
             username=settings.MIKROTIK_USER,
             password=settings.MIKROTIK_PASSWORD,
             port=settings.MIKROTIK_PORT,
-            use_ssl=False
+            use_ssl=False,
+            plaintext_login=True
         )
         api = conexion.get_api()
         return api, conexion
     except Exception as e:
         usuarioSistema, _ = User.objects.get_or_create(username='system')
         Logs.objects.create(
-            idPerson= usuarioSistema,
+            idPersonal= usuarioSistema,
             modulo='Mikrotik',
             mensaje= f'error al conectar con el router: {str(e)}',
             error =True
@@ -43,7 +44,7 @@ def reconectarCliente(direccionIp):
         listaDirecciones = api.get_resource('/ip/firewall/address-list')
         items = listaDirecciones.get(list='suspendidos', address=direccionIp)
         for item in items:
-            item.delete()
+            listaDirecciones.remove(id=item['id'])
         return True
     except Exception as e:
         raise e
