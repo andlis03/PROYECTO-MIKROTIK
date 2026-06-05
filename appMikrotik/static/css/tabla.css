@@ -1,0 +1,41 @@
+/* Columnas de tablas de acción: no permitir salto de línea y fijar ancho razonable */
+.acciones-col {
+    white-space: nowrap;
+    width: 120px;
+    max-width: 130px;
+}
+
+.acciones-col .btn {
+    min-width: 32px;
+}
+
+.acciones-col .btn + .btn {
+    margin-left: 0.25rem;
+}
+
+/* Estilos personalizados para cabeceras de tabla */
+.tabla-header-title {
+    font-family: var(--base-font);
+    font-style: italic;
+    color: #4b7fc5;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+/* Placeholder en inputs si aplica */
+.tabla-input::placeholder {
+    font-family: var(--base-font);
+    font-size: var(--font-size-sm);
+    font-style: italic;
+    color: #798191;
+    opacity: 1;
+}
+
+/* Texto normal de tabla */
+.tabla-text {
+    font-family: var(--base-font);
+    color: #111827;
+    font-size: var(--font-size-base);
+    line-height: 1.4;
+}

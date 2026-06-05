@@ -1,0 +1,20 @@
+.target-resumen {
+    border-radius: 15px;
+
+}.target-resumen:hover {
+    transform: scale(1.03);
+    transition: transform 0.2s ease-in-out;
+}
+
+.bg-solventes {
+    background-color: #56d97b;
+}
+.bg-exonerados {
+    background-color: #52abf4;
+}
+.bg-pendientes {
+    background-color: #fca624;
+}
+.bg-desconectados {
+    background-color: #f44336;
+}
