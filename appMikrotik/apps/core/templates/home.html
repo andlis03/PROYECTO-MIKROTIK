@@ -1,8 +1,68 @@
+<!-- Inicio o dashboard de la aplicación, 
+aqui se alojan elementos principales que proporcionan una vision general del sistema -->
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Inicio{% endblock %}
+{% block title %} Inicio {% endblock %}
+{% block head %}
+    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block breadcrumb %}
+    
+{% endblock %}
 
 {% block content_page %}
     
+    <!-- tarjeta de bienvenida -->
+    <div class="">
+        <span class="h1 ms-2">Bienvenido al Panel de Control</span>
+        <p class="text-muted">Administra tu sistema de manera eficiente y sencilla aprovechando una vision general de sus clientes y la red.</p>
+        <hr>
+    </div>
+
+    <!-- tarjetas de resumen de clientes-->
+    <div class="mb-2 ms-2">
+        <span class="h4">Estado general de los clientes</span>
+    </div>
+    <div class="row g-4">
+        <div class="col-3">
+            <!-- tarjeta de clientes solventes -->
+            <div class="card target-resumen bg-solventes">
+                <div class="card-body">
+                    <h5 class="card-title h2">Solventes</h5>
+                    <p class="card-text"><strong>15</strong> disfrutando servicio</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <!-- tarjeta de clientes exonerados -->
+            <div class="card target-resumen bg-exonerados">
+                <div class="card-body">
+                    <h5 class="card-title h2">Exonerados</h5>
+                    <p class="card-text"><strong>2</strong> exonerados de pagos</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <!-- tarjeta de clientes pendientes -->
+            <div class="card target-resumen bg-pendientes">
+                <div class="card-body">
+                    <h5 class="card-title h2">Pendientes</h5>
+                    <p class="card-text"><strong>3</strong> en espera de pago</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <!-- tarjeta de clientes desconectados -->
+            <div class="card target-resumen bg-desconectados">
+                <div class="card-body">
+                    <h5 class="card-title h2">Desconectados</h5>
+                    <p class="card-text"><strong>13</strong> fuera de servicio</p>
+                </div>
+            </div>
+        </div>
+    </div>
     
+    
+
 {% endblock %}
