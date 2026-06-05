@@ -1,16 +1,45 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from core.models import Cliente, Logs, Factura
-from .forms import ClienteForm
+from core.models import Cliente, Logs
+from .forms import ClienteForm, FiltroClientes
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 def gestion_cliente(request,id):
-    if id == 0:
-        objetos = Cliente.objects.filter(borrado = False)
-    else:
-        objetos = Cliente.objects.filter(idCliente=id, borrado = False)
+    todos_clientes = Cliente.objects.filter(borrado=False).order_by('nombre')
 
-    return render(request, 'gestion_clientes.html', {'clientes': objetos}) 
+    filtro = FiltroClientes(request.POST)
+
+    if filtro.is_valid():
+        nombreCliente = filtro.cleaned_data.get('nombreCliente')
+        estado_seleccionado = filtro.cleaned_data.get('estado')
+
+        # Filtro por texto (Nombre O Cédula)
+        if nombreCliente:
+            nombreCliente = nombreCliente.strip()
+            todos_clientes = todos_clientes.filter(
+                Q(nombre__icontains=nombreCliente) | 
+                Q(cedula__icontains=nombreCliente)
+            )
+
+        if estado_seleccionado:
+            todos_clientes = todos_clientes.filter(estado=estado_seleccionado)
+
+    paginator = Paginator(todos_clientes, 10)
+    
+    query_params = request.GET.copy()
+    if 'page' in query_params:
+        del query_params['page']
+    
+    page_number = request.GET.get('page')
+    clientes = paginator.get_page(page_number)
+        
+    return render(request, 'gestion_clientes.html', {
+        'clientes': clientes, 
+        'filtros': filtro, 
+        'query_string': query_params.urlencode() 
+    })
 
 @login_required
 def crear_cliente(request):
@@ -19,6 +48,7 @@ def crear_cliente(request):
         if form.is_valid():
             
             cliente = form.save(commit=False)
+            cliente.fecha = timezone.now()
 
             if form.cleaned_data.get('exonerar_cliente'):
                 cliente.estado = 'Exonerado'
@@ -28,13 +58,7 @@ def crear_cliente(request):
                 cliente.saldo = cliente.idPlan.precioUSD 
                 cliente.borrado = False       
             
-            cliente.save() 
-
-            Factura.objects.create(
-                idCliente = cliente,
-                montoUSD = cliente.idPlan.precioUSD + 40,  #Costo de instalacion en 40$
-                fecha=timezone.now()
-            )   
+            cliente.save()   
 
             Logs.objects.create(
                 idPersonal=request.user,
@@ -52,7 +76,7 @@ def crear_cliente(request):
                 fecha=timezone.now()
             )
 
-            return redirect('gestion_clientes', 0) 
+            return redirect('gestion_clientes') 
     else:
         form = ClienteForm() 
 

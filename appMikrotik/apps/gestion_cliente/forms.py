@@ -1,4 +1,5 @@
-from django.forms import ModelForm, forms, BooleanField
+from django import forms
+from django.forms import ModelForm, BooleanField
 from core.models import Cliente
 from django.forms.widgets import CheckboxInput
 import re 
@@ -89,3 +90,10 @@ class ClienteForm(ModelForm):
         
         return cleaned_data
 
+class FiltroClientes(forms.Form):
+
+    nombreCliente = forms.CharField(label='Buscar Cliente', max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Nombre o Cédula', 'class': 'form-control'}))
+    
+    OPCIONES_ESTADO = [('', 'Todos')] + Cliente.SeleccionEstado.choices
+    
+    estado = forms.ChoiceField(choices=OPCIONES_ESTADO, required=False, widget=forms.Select(attrs={'class': 'form-select'}))
