@@ -19,7 +19,7 @@ class PagoForm(ModelForm):
             'tasa': forms.TextInput(attrs={'class': 'form-control','inputmode': 'decimal'}),
             'metodo': forms.Select(attrs={'class': 'form-select'}),
             'comprobante': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'fecha': forms.DateTimeInput( attrs={'class': 'form-control', 'type': 'date'}),
+            'fecha': forms.DateInput( attrs={'class': 'form-control', 'type': 'date'}),
         }
 
 class FiltroPagos(forms.Form):
