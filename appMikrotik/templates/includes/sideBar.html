@@ -38,20 +38,14 @@
                 {% endif %}
                 {% if user.is_superuser or 'soporte' in user.groups.all|join:"," %}
                 <li class="nav-item">
-                    <a href="#" class="nav-link text-dark d-flex align-items-center" title="Servicios">
-                        <img src="{% static 'images/servicios.svg' %}" alt="Servicios" width="20" height="20">
-                        <span class="sidebar-text text-dark menu-text collapse show">Servicios</span>
-                    </a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
                     <a href="#" class="nav-link text-dark d-flex align-items-center" title="Morosidad">
                         <img src="{% static 'images/morosidad.svg' %}" alt="Morosidad" width="20" height="20">
                         <span class="sidebar-text text-dark menu-text collapse show">Morosidad</span>
                     </a>
                 </li>
+                {% endif %}
                 <li class="nav-item">
-                    <a href="#" class="nav-link text-dark d-flex align-items-center" title="Reportes">
+                    <a href="{% url 'gestion_reportes' %}" class="nav-link text-dark d-flex align-items-center" title="Reportes">
                         <img src="{% static 'images/reportes.svg' %}" alt="Reportes" width="20" height="20">
                         <span class="sidebar-text text-dark menu-text collapse show">Reportes</span>
                     </a>

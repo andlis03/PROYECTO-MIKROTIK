@@ -27,7 +27,7 @@
     <div class="table-responsive card">
         <!-- cabecera de la tabla y filtros para buscar -->
         <div class="card-header">
-            <h3 class="card-title h2">Historial de Pagos</h3>
+            <h3 class="card-title h3 mb-2 tabla-header-title"> Historial de Pagos </h3>
                 <form method="post">
                     {% csrf_token %}
                     <div class="d-flex justify-content-start gap-3 align-items-center mb-1">
@@ -54,9 +54,9 @@
                 <thead>
                     <tr>
                         <th scope="col">Fecha</th>
+                        <th scope="col">RIF</th>
                         <th scope="col">Cliente</th>
                         <th scope="col">Monto USD</th>
-                        <th scope="col">Metodo de pago</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -64,11 +64,11 @@
                     {% if pagos %}
                         {% for pago in pagos %}
                             <tr>
-                                <td>{{ pago.fecha }}</td>
+                                <td>{{ pago.fecha|date:'j \\d\\e F \\d\\e Y' }}</td>
+                                <td>{{ pago.idCliente.cedula }}</td>
                                 <td>{{ pago.idCliente.nombre }}</td>
                                 <td>{{ pago.montoUSD }}</td>
-                                <td>{{ pago.metodo }}</td>
-                                <td>
+                                <td class="acciones-col text-nowrap">
                                     <a
                                         name=""
                                         id=""

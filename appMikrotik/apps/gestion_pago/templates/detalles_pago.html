@@ -39,7 +39,7 @@
             
             <div class="row g-4 mb-4">
                 <div class = col-md-4>
-                    <label class="form-label fst-italic text-muted small mb-1">Fecha de registro de Pago</label>
+                    <label class="form-label fst-italic text-muted small mb-1">Fecha de registro</label>
                     <input type="text" class="form-control bg-light " value="{{ pago.fecha }}" readonly>
                 </div>
 
@@ -83,7 +83,7 @@
                     </div>
 
                     {% if pago.comprobante %}
-                        {% include 'modals/modal_comprobantes.html' %}
+                        {% include 'modals/comprobante.html' %}
                     {% endif %}
                 </div>
             </div>
