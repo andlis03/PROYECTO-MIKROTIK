@@ -41,12 +41,7 @@
                         <div class="d-flex justify-content-end align-items-center flex-wrap">
                             <!--ACA VA FILTRO PARA BUSCAR CLIENTES POR NOMBRE O RIF-->
                             <div class="me-3 text-nowrap">
-                                <input
-                                    type="text"
-                                    name="nombreCliente"
-                                    class="form-control tabla-input"
-                                    placeholder="Nombre o RIF del cliente"
-                                >
+                                {{ filtros.nombreCliente }}
                             </div>
                             <!--boton buscar-->
                             <div class="me-3 text-nowrap"> 
@@ -62,12 +57,7 @@
         
                             <div class="text-nowrap">
                                 <!--ACA VA FILTRO PARA BUSCAR CLIENTES POR ESTADO-->
-                                <select name="estado" class="form-select form-select-sm">
-                                    <option value="">Todos</option>
-                                    <option value="Solvente">Solvente</option>
-                                    <option value="Pendiente">Pendiente</option>
-                                    <option value="Desconectado">Desconectado</option>
-                                </select>
+                                {{ filtros.estado }}
                             </div>     
                         </div>
                     </div>
