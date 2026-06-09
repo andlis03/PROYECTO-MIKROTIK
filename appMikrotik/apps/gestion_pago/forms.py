@@ -14,6 +14,13 @@ class PagoForm(ModelForm):
     class Meta:
         model = Pago
         fields = ['montoUSD', 'tasa', 'metodo', 'comprobante', 'fecha']
+        labels = {
+            'montoUSD': 'Monto a Pagar ($)',
+            'tasa': 'Tasa del Día',
+            'metodo': 'Método de Pago',
+            'comprobante': 'Comprobante',
+            'fecha': 'Fecha',
+        }
         widgets = {
             'montoUSD': forms.TextInput(attrs={'class': 'form-control','inputmode': 'decimal'}),
             'tasa': forms.TextInput(attrs={'class': 'form-control','inputmode': 'decimal'}),

@@ -50,10 +50,34 @@
         <hr class="text-muted mb-3">
 
         <div class="mb-4">
-            <span class="h5 text-danger">{{ error }}</span>
+            
         
             <form action="{% url 'crear_pago' cliente.id %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
+                {% if form.errors or error %}
+                    <div class="alert alert-danger alert-dismissible">
+                        <h5 class="alert-heading">Error al Registrar el Pago</h5>
+                        <button type="button" class="position-absolute top-0 end-0 mt-3 me-3 bg-transparent border-0 p-0" data-bs-dismiss="alert">
+                            <img src="{% static 'images/boton_cerrar.svg' %}" alt="Cerrar" width="20" height="20">
+                        </button>
+                            
+                        <ul class="mb-0">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li><strong>{{ field.label }}:</strong>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            {% if error %}
+                                <li>{{ error }}</li>
+                            {% endif %} 
+                        </ul>
+                    </div>
+                {% endif %}
+
+
                 <div class="row g-4">  
                     <div class="col-md-4">
                         <h4 class=".h4">Registrar Pago</h4>
