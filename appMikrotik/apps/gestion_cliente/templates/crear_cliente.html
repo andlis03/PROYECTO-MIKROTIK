@@ -2,28 +2,131 @@
 
 {% block title %}Registrar Nuevo Cliente{% endblock %}
 
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item"><a href="{% url 'gestion_clientes' 0 %}">Gestión de Clientes</a></li>
+    <li class="breadcrumb-item active">Registrar Nuevo Cliente</li>
+{% endblock %}
+
 {% block content_page %}
-    <div class="card">
-        <div class="card-header">
-            <span class="h3">Registrar nuevo cliente</span>
-        </div>
+    <div class="container p-4  bg-white ">
+
         <div class="card-body">
             {% if error %}
                 <span class="h5 text-danger">{{ error }}</span>
                 <hr>
             {% endif %}
             
-            <form action="{% url 'crear_cliente' %}" method="post">
+            <form action="{% url 'crear_cliente' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 
-                {{ form.as_p }}
-                
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-primary">Registrar cliente</button>
-                    
-                    <a href="{% url 'gestion_clientes'%}" class="btn btn-secondary">Volver</a>
+                <div class="row g-4">  
+                    <div class="col-md-4">
+                        <h4 class=".h4">Datos del cliente</h4>
+                    </div>
                 </div>
+                <hr class="text-muted mb-3">
+                <section class="contenedor">  <!-- Contenedor para los datos del cliente-->
+                    <div class="row g-4">
+                        <div class="col-md-6 ">
+                            <div class="mb-2">
+                                <label class="form-label fst-italic text-muted small ">Nombre</label>
+                                {{ form.nombre }}
+                            </div>
+
+                            <div class = "row g-4" >
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label fst-italic text-muted small mb-1">Rif</label>
+                                    {{ form.cedula }}
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label fst-italic text-muted small mb-1">Celular</label>
+                                    {{ form.celular }}
+                                </div>
+                            </div>
+                        
+                            <label class="form-label fst-italic text-muted small mb-1">Correo Electrónico</label>
+                            {{ form.email }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fst-italic text-muted small">Dirección de Residencia</label>
+                            {{ form.direccion }}
+
+                            <div class = "row g-4">
+                                <div class="col-md-12 text-end">
+                                    <label class="form-label fst-italic text-muted small ">Exonerar Cliente</label>
+                                    {{ form.exonerar_cliente}}                     
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="row g-4 mt-4">
+                    <div class="col-md-4">
+                        <h4 class=".h4">Datos del servicio</h4>
+                    </div>
+                </div>
+
+                <hr class="text-muted mb-3">
+
+                <section class="contenedor">  <!-- Contenedor para los datos del servicio-->
+                    <div class="row g-4">
+                        <div class="col-md-3 mb-2">
+                            <label class="form-label fst-italic text-muted small mb-1">Plan de Internet</label>
+                            {{ form.idPlan }}
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <label class="form-label fst-italic text-muted small mb-1">Precio (USD)</label>
+                            <input id="id_plan_precioUSD" type="text" class="form-control bg-light" value="" readonly>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fst-italic text-muted small mb-1">Velocidad de Subida (Mbps)</label>
+                            <input id="id_plan_velocidad_subida" type="text" class="form-control bg-light" value="" readonly>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fst-italic text-muted small mb-1">Velocidad de Bajada (Mbps)</label>
+                            <input id="id_plan_velocidad_bajada" type="text" class="form-control bg-light" value="" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label fst-italic text-muted small mb-1">Direccion IP</label>
+                            {{ form.direccionIP }}
+                        </div>
+                    </div>
+                </section>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-success">Confirmar</button>
+                </div>
+                
             </form>
         </div>
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const planSelect = document.querySelector('#id_idPlan');
+        const precioInput = document.querySelector('#id_plan_precioUSD');
+        const subidaInput = document.querySelector('#id_plan_velocidad_subida');
+        const bajadaInput = document.querySelector('#id_plan_velocidad_bajada');
+
+        function actualizarDatosPlan() {
+            const opcion = planSelect?.selectedOptions?.[0];
+            precioInput.value = opcion?.dataset?.preciousd || '';
+            subidaInput.value = opcion?.dataset?.velocidadSubida || '';
+            bajadaInput.value = opcion?.dataset?.velocidadBajada || '';
+        }
+
+        if (planSelect) {
+            planSelect.addEventListener('change', actualizarDatosPlan);
+            actualizarDatosPlan();
+        }
+    });
+    </script>
 {% endblock %}
