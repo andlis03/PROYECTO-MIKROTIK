@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Buscar clientes {% endblock %}
+
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item"><a href="{% url 'gestion_pagos' %}">Gestión de Pagos</a></li>
+    <li class="breadcrumb-item"> Buscar clientes </li>
+{% endblock %}
+
+{% block content_page %}
+
+    <div class="mb-3">
+        <span class="h1">Seleccionar abonado del pago</span>
+        <hr>
+    </div>
+        <!-- tarjeta para la tabla de listado de clientes-->
+    <div class="table-responsive card">
+        <!--cabecera de la tabla-->
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h3 class="card-title h2">Listado de clientes</h3>
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex justify-content-start gap-3 align-items-center mb-1">
+                    <!--buscar por nombre o rif-->
+                    {{ filtros.nombreCliente }}
+                    <!--buscar-->
+                    <button class="btn btn-sm btn-outline-dark" type="submit">
+                        <img src="{% static 'images/busqueda.svg' %}" alt="Buscar" title="Aplicar filtros y buscar" width="20" height="20">
+                    </button>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Rif</th>
+                        <th scope="col">Cliente</th>
+                        <th scope="col">Plan</th>
+                        <th scope="col">Estado actual</th>
+                        <th scope="col">Continuar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if clientes %}
+                        {% for cliente in clientes %}
+
+                            <tr>
+                                <td>{{cliente.cedula}}</td>
+                                <td>{{cliente.nombre}}</td>
+                                <td>{{cliente.idPlan}}</td>
+                                <td>
+                                    {% if cliente.estado == 'Pendiente' %}
+                                        <span class="badge bg-warning text-dark">Pendiente</span>
+                                    {% elif cliente.estado == 'Desconectado' %}
+                                        <span class="badge bg-secondary">Desconectado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a
+                                        name=""
+                                        id=""
+                                        title="continuar a pago"
+                                        class="btn btn-sm"
+                                        href="{% url 'pagos_pendientes' %}"
+                                        role="button"
+                                        ><img src="{% static 'images/continuar.svg' %}" alt="continuar" width="20" height="20"></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="text-center">
+                                Sin resultados.
+                            </td>
+                        </tr>
+                    {% endif %}                            
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+{% endblock %}

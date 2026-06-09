@@ -35,4 +35,4 @@ class FiltroPagos(forms.Form):
     fecha_fin = forms.DateField(label='Hasta', required=False, widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
 
 class FiltroPendientes(forms.Form):
-    nombreCliente = forms.CharField(label='Nombre o Cedula', max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Nombre', 'class': 'form-control tabla-input'}))
+    nombreCliente = forms.CharField(label='Nombre o Cedula', max_length=100, required=False, widget=forms.TextInput(attrs={'placeholder': 'Nombre o RIF', 'class': 'form-control tabla-input'}))
