@@ -4,6 +4,8 @@ from .models import Logs
 from django.contrib.auth.models import User
 
 def obtenerConexionMikroti():
+    """Retorna una conexion API al router Mikrotik usando la 
+    libreria routeros-api"""
     try:
         conexion = routeros_api.RouterOsApiPool(
             settings.MIKROTIK_HOST,
@@ -26,6 +28,7 @@ def obtenerConexionMikroti():
         raise e
 
 def suspenderCliente(direccionIp):
+    # Aplica una regla de firewall para bloquear una IP especifica 
     api, conexion = obtenerConexionMikroti()
     try:
         listaDirecciones= api.get_resource('/ip/firewall/address-list')
@@ -39,6 +42,7 @@ def suspenderCliente(direccionIp):
         conexion.disconnect()
 
 def reconectarCliente(direccionIp):
+    #Elimina la regla de firewall que bloqueaba a la IP especifica
     api, conexion = obtenerConexionMikroti()
     try:
         listaDirecciones = api.get_resource('/ip/firewall/address-list')
