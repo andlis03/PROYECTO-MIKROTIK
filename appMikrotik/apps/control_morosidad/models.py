@@ -21,4 +21,17 @@ class SeguimientoMorosidad(models.Model):
 
     def __str__(self):
         return f"{self.cliente.nombre} - Pendiente desde: {self.fechaInicioPendiente}"
+
+# Para Reevaluar cliente automaticamente cuando se registra un pago
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from core.models import Pago
+
+@receiver(post_save, sender=Pago)
+def reevaluarClientePorPago(sender, instance, created, **kwargs):
+    """Cada vez que se guarda un pago, reevalua el estado del cliente asociado"""
+    from .views import actualizarEstadoCliente
+    cliente = instance.idCliente
+    actualizarEstadoCliente(cliente)
     
