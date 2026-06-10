@@ -1,26 +1,118 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Modificar Cliente{% endblock %}
 
+{% block breadcrumb_items %}
+    <li class="breadcrumb-item"><a href="{% url 'gestion_clientes' %}">Gestión de Clientes</a></li>
+    <li class="breadcrumb-item active">Modificar Cliente</li>
+{% endblock %}
+
 {% block content_page %}
-    <div class="card">
-        <div class="card-header">
-            <span class="h3">Modificar cliente</span>
-        </div>
+
+<div class="container p-4 bg-white  ">
+
         <div class="card-body">
             {% if error %}
                 <span class="h5 text-danger">{{ error }}</span>
                 <hr>
             {% endif %}
-            <form action="{% url 'modificar_cliente' form.instance.id %}" method="post">
+            
+            <form action="{% url 'modificar_cliente' form.instance.id %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <div class="mt-4">
-                    <button type="submit" class="btn btn-primary">Modificar cliente</button>
-                    
-                    <a href="{% url 'gestion_clientes'%}" class="btn bg-secondary text-white">Volver</a>
+                
+                <div class="row g-4">  
+                    <div class="col-md-4">
+                        <h4 class=".h4">Datos del cliente</h4>
+                    </div>
                 </div>
+                <hr class="text-muted mb-3">
+                <section class="contenedor">  <!-- Contenedor para los datos del cliente-->
+                    <div class="row g-4">
+                        <div class="col-md-6 ">
+                            <div class="mb-2">
+                                <label class="form-label fst-italic text-muted small ">Nombre</label>
+                                {{ form.nombre }}
+                            </div>
+
+                            <div class = "row g-4" >
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label fst-italic text-muted small mb-1">Rif</label>
+                                    {{ form.cedula }}
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label class="form-label fst-italic text-muted small mb-1">Celular</label>
+                                    {{ form.celular }}
+                                </div>
+                            </div>
+                        
+                            <label class="form-label fst-italic text-muted small mb-1">Correo Electrónico</label>
+                            {{ form.email }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fst-italic text-muted small">Dirección de Residencia</label>
+                            {{ form.direccion }}
+
+                            <div class = "row g-4">
+                                <div class="col-md-12 text-end">
+                                    <label class="form-label fst-italic text-muted small ">Exonerar Cliente</label>
+                                    {{ form.exonerar_cliente}}                     
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="row g-4 mt-4">
+                    <div class="col-md-4">
+                        <h4 class=".h4">Datos del servicio</h4>
+                    </div>
+                </div>
+
+                <hr class="text-muted mb-3">
+
+                <section class="contenedor">  <!-- Contenedor para los datos del servicio-->
+                    <div class="row g-4">
+                        <div class="col-md-3 mb-2">
+                            <label class="form-label fst-italic text-muted small mb-1">Plan de Internet</label>
+                            {{ form.idPlan }}
+                        </div>
+
+                        <div class="col-md-3 mb-2">
+                            <label class="form-label fst-italic text-muted small mb-1">Precio (USD)</label>
+                            <input id="id_plan_precioUSD" type="text" class="form-control bg-light" value="" readonly>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fst-italic text-muted small mb-1">Velocidad de Subida (Mbps)</label>
+                            <input id="id_plan_velocidad_subida" type="text" class="form-control bg-light" value="" readonly>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fst-italic text-muted small mb-1">Velocidad de Bajada (Mbps)</label>
+                            <input id="id_plan_velocidad_bajada" type="text" class="form-control bg-light" value="" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label fst-italic text-muted small mb-1">Direccion IPv4</label>
+                            {{ form.direccionIP }}
+                        </div>
+                    </div>
+                </section>
+
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-success">Confirmar cambios</button>
+                </div>
+                
             </form>
         </div>
     </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/seleccionarPlan.js' %}"></script>
 {% endblock %}

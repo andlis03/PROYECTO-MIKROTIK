@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Registrar Nuevo Cliente{% endblock %}
 
 {% block breadcrumb_items %}
@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content_page %}
-    <div class="container p-4  bg-white ">
+    <div class="container p-4 bg-white  ">
 
         <div class="card-body">
             {% if error %}
@@ -95,7 +95,7 @@
 
                     <div class="row g-4">
                         <div class="col-md-6">
-                            <label class="form-label fst-italic text-muted small mb-1">Direccion IP</label>
+                            <label class="form-label fst-italic text-muted small mb-1">Direccion IPv4</label>
                             {{ form.direccionIP }}
                         </div>
                     </div>
@@ -109,24 +109,11 @@
         </div>
     </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const planSelect = document.querySelector('#id_idPlan');
-        const precioInput = document.querySelector('#id_plan_precioUSD');
-        const subidaInput = document.querySelector('#id_plan_velocidad_subida');
-        const bajadaInput = document.querySelector('#id_plan_velocidad_bajada');
+    
+{% endblock %}
 
-        function actualizarDatosPlan() {
-            const opcion = planSelect?.selectedOptions?.[0];
-            precioInput.value = opcion?.dataset?.preciousd || '';
-            subidaInput.value = opcion?.dataset?.velocidadSubida || '';
-            bajadaInput.value = opcion?.dataset?.velocidadBajada || '';
-        }
+{% block scripts %}
 
-        if (planSelect) {
-            planSelect.addEventListener('change', actualizarDatosPlan);
-            actualizarDatosPlan();
-        }
-    });
-    </script>
+<script src="{% static 'js/seleccionarPlan.js' %}"></script>
+    
 {% endblock %}

@@ -114,15 +114,17 @@
                                             role="button"
                                             ><img src="{% static 'images/editar.svg' %}" alt="" width="20" height="20"></a
                                         >
-                                        <a
-                                            name=""
-                                            id=""
-                                            title="Desactivar cliente"
+                                        <button
+                                            type="button"
                                             class="btn btn-sm"
-                                            href="{% url 'confirmar_borrado' cliente.id %}"
-                                            role="button"
-                                            ><img src="{% static 'images/papelera_cliente.svg' %}" alt="" width="20" height="20">
-                                        </a>
+                                            title="Desactivar cliente"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#confirmarBorradoModal"
+                                            data-delete-url="{% url 'confirmar_borrado' cliente.id %}"
+                                            data-client-name="{{ cliente.nombre }}"
+                                        >
+                                            <img src="{% static 'images/papelera_cliente.svg' %}" alt="" width="20" height="20">
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -136,6 +138,8 @@
                     {% endif %}
                 </tbody>
             </table>
+
+            {% include 'modals/confirmar_borrar.html' %}
         </div>
 
         <div class="card-footer">
@@ -174,4 +178,8 @@
             {% endif %}
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/borrarCliente.js' %}"></script>
 {% endblock %}

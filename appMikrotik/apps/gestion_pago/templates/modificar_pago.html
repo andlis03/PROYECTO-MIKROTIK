@@ -89,7 +89,13 @@
 
                     <div class="col-md-4">
                         <label class="form-label fst-italic text-muted small mb-1"> Comprobante </label>
-                        {{ form.comprobante }}
+                        <div>
+                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#comprobanteModal">
+                                Ver / Reemplazar comprobante
+                            </button>
+                        </div>
+
+                        {% include 'modals/comprobanteM.html' %}
                     </div>
                 </div>
 
