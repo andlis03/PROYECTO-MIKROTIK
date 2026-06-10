@@ -10,7 +10,7 @@ from core.autenticacion import grupo_requerido
 # Este metodo se encarga de mostrar la lista de clientes registrados, 
 # con la posibilidad de aplicar filtros por nombre del cliente y cedula.
 @login_required
-@grupo_requerido('soporte')
+@grupo_requerido('asistente_administrativo')
 def gestion_cliente(request):
     todos_clientes = Cliente.objects.filter(borrado=False).order_by('nombre')
 
