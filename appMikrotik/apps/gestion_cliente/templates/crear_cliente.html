@@ -2,20 +2,42 @@
 {% load static %}
 {% block title %}Registrar Nuevo Cliente{% endblock %}
 
+<!-- Breadcrumb para mostrar la ruta de navegación dentro de la aplicación, con enlaces a las secciones anteriores y el título de la sección actual -->
 {% block breadcrumb_items %}
     <li class="breadcrumb-item"><a href="{% url 'gestion_clientes' %}">Gestión de Clientes</a></li>
     <li class="breadcrumb-item active">Registrar Nuevo Cliente</li>
 {% endblock %}
 
 {% block content_page %}
+    <!-- Contenedor principal para el formulario de registro de nuevo cliente que el usuario o administrador pueda querer realizar -->
     <div class="container p-4 bg-white  ">
 
         <div class="card-body">
-            {% if error %}
-                <span class="h5 text-danger">{{ error }}</span>
-                <hr>
+            <!-- Mostrar errores del formulario ya sea por validación o por otros motivos -->
+            {% if form.errors or error %}
+                    <div class="alert alert-danger alert-dismissible">
+                        <h5 class="alert-heading">Error al Registrar cliente</h5>
+                        <button type="button" class="position-absolute top-0 end-0 mt-3 me-3 bg-transparent border-0 p-0" data-bs-dismiss="alert">
+                            <img src="{% static 'images/boton_cerrar.svg' %}" alt="Cerrar" width="20" height="20">
+                        </button>
+                            
+                        <ul class="mb-0">
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            {% if error %}
+                                <li>{{ error }}</li>
+                            {% endif %} 
+                        </ul>
+                    </div>
             {% endif %}
             
+            <!-- Formulario para registrar un nuevo cliente -->
             <form action="{% url 'crear_cliente' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 
@@ -101,6 +123,7 @@
                     </div>
                 </section>
 
+                <!-- Botón para enviar el formulario y confirmar los cambios realizados en los datos del cliente -->
                 <div class="d-flex justify-content-center mt-4">
                     <button type="submit" class="btn btn-success">Confirmar</button>
                 </div>
@@ -113,7 +136,7 @@
 {% endblock %}
 
 {% block scripts %}
-
+<!-- Script para manejar la lógica de selección de plan y actualización de los campos relacionados con el plan seleccionado en el formulario de registro de nuevo cliente -->
 <script src="{% static 'js/seleccionarPlan.js' %}"></script>
     
 {% endblock %}
