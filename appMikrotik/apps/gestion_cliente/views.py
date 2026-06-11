@@ -184,3 +184,11 @@ def borrar_cliente(request, id):
         return redirect('gestion_clientes')
         
     return render(request, 'confirmar_borrar.html', {'cliente': cliente})
+
+# Este metodo se encarga de mostrar la informacion detallada de un cliente especifico,
+# cargando tanto sus datos personales como los del servicio contratado de forma de solo lectura.
+@login_required
+@grupo_requerido('asistente_administrativo')
+def detalles_cliente(request, id):
+    cliente = get_object_or_404(Cliente, id=id)
+    return render(request, 'detalles_cliente.html', {'cliente': cliente})
