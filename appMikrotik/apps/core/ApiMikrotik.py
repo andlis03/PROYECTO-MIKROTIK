@@ -6,6 +6,8 @@ from django.core.validators import validate_ipv4_address
 from django.core.exceptions import ValidationError
 
 def obtenerConexionMikroti():
+    """Retorna una conexion API al router Mikrotik usando la 
+    libreria routeros-api"""
     try:
         conexion = routeros_api.RouterOsApiPool(
             settings.MIKROTIK_HOST,
@@ -35,6 +37,7 @@ def suspenderCliente(direccionIp):
     if not direccionIp or str(direccionIp).strip() == "":
         raise ValueError("La dirección IP no puede estar vacía")
         
+    # Aplica una regla de firewall para bloquear una IP especifica 
     api, conexion = obtenerConexionMikroti()
     try:
         listaDirecciones= api.get_resource('/ip/firewall/address-list')
@@ -55,6 +58,7 @@ def reconectarCliente(direccionIp):
     if not direccionIp or str(direccionIp).strip() == "":
         raise ValueError("La dirección IP no puede estar vacía")
 
+    #Elimina la regla de firewall que bloqueaba a la IP especifica
     api, conexion = obtenerConexionMikroti()
     try:
         listaDirecciones = api.get_resource('/ip/firewall/address-list')
