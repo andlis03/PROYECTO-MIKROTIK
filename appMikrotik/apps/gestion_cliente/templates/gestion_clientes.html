@@ -70,8 +70,8 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">RIF</th>
-                        <th scope="col">Nombre</th>
+                        <th scope="col">Cedula/ RIF</th>
+                        <th scope="col">Nombre</th>  
                         <th scope="col">Direccion</th>
                         <th scope="col">Estado</th>
                         <th scope="col" class="acciones-col">Acciones</th>
@@ -105,9 +105,9 @@
                                             id=""
                                             title="Ver detalles de cliente"
                                             class="btn btn-sm"
-                                            href="#"
+                                            href="{% url 'detalles_cliente' cliente.id %}"
                                             role="button"
-                                            ><img src="{% static 'images/ver_detalles.svg' %}" alt="" width="20" height="20"></a
+                                           ><img src="{% static 'images/ver_detalles.svg' %}" alt="" width="20" height="20"></a
                                         >
                                         <a
                                             name=""

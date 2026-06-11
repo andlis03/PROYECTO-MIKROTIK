@@ -10,5 +10,6 @@ urlpatterns = [
     path('gestion_cliente/', views.gestion_cliente, name='gestion_clientes'),
     path('crear_cliente/', views.crear_cliente, name='crear_cliente'),
     path('modificar_cliente/<int:id>/', views.modificar_cliente, name='modificar_cliente'),
-    path('borrar_cliente/<int:id>/', views.borrar_cliente, name='confirmar_borrado')
+    path('borrar_cliente/<int:id>/', views.borrar_cliente, name='confirmar_borrado'),
+    path('detalles_cliente/<int:id>/', views.detalles_cliente, name='detalles_cliente')
 ]
